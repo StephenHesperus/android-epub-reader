@@ -75,6 +75,11 @@ public class EpubReaderProvider extends ContentProvider {
 		sContentsProjectionMap.put(Contents.BOOK_ID, Contents.BOOK_ID);
 	}
 
+	@Override
+	public void shutdown() {
+		super.shutdown();
+	}
+
 	static class DatabaseHelper extends SQLiteOpenHelper {
 		private static final String CREATE_BOOK_TABLE =
 				"CREATE TABLE " + Books.TABLE_NAME + " ( "
