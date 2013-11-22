@@ -221,7 +221,7 @@ public class EpubReaderProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		if (sUriMatcher.match(uri) != BOOKS
-				|| sUriMatcher.match(uri) != CONTENTS) {
+				&& sUriMatcher.match(uri) != CONTENTS) {
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
