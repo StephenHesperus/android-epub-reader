@@ -225,16 +225,6 @@ public class EpubReaderProvider extends ContentProvider {
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 
-		Long now = System.currentTimeMillis();
-
-		if (!values.containsKey(Books.ADDED_DATE)) {
-			values.put(Books.ADDED_DATE, now);
-		}
-
-		if (!values.containsKey(Books.LAST_READING_DATE)) {
-			values.put(Books.LAST_READING_DATE, 0);
-		}
-
 		SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
 
 		long id;
