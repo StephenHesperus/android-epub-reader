@@ -75,11 +75,6 @@ public class EpubReaderProvider extends ContentProvider {
 		sContentsProjectionMap.put(Contents.BOOK_ID, Contents.BOOK_ID);
 	}
 
-	@Override
-	public void shutdown() {
-		super.shutdown();
-	}
-
 	static class DatabaseHelper extends SQLiteOpenHelper {
 		private static final String CREATE_BOOK_TABLE =
 				"CREATE TABLE " + Books.TABLE_NAME + " ( "
@@ -272,7 +267,7 @@ public class EpubReaderProvider extends ContentProvider {
 			qb.setProjectionMap(sBooksProjectionMap);
 
 			if (TextUtils.isEmpty(sortOrder)) {
-				orderBy = Books.BOOK_TABLE_DEFAULT_SORT_ORDER;
+				orderBy = Books.DEFAULT_SORT_ORDER;
 			} else {
 				orderBy = sortOrder;
 			}
@@ -286,7 +281,7 @@ public class EpubReaderProvider extends ContentProvider {
 					);
 
 			if (TextUtils.isEmpty(sortOrder)) {
-				orderBy = Books.BOOK_TABLE_DEFAULT_SORT_ORDER;
+				orderBy = Books.DEFAULT_SORT_ORDER;
 			} else {
 				orderBy = sortOrder;
 			}
@@ -298,7 +293,7 @@ public class EpubReaderProvider extends ContentProvider {
 			qb.setProjectionMap(sContentsProjectionMap);
 
 			if (TextUtils.isEmpty(sortOrder)) {
-				orderBy = Contents.CONTENTS_TABLE_DEFAULT_SORT_ORDER;
+				orderBy = Contents.DEFAULT_SORT_ORDER;
 			} else {
 				orderBy = sortOrder;
 			}
@@ -315,7 +310,7 @@ public class EpubReaderProvider extends ContentProvider {
 					);
 
 			if (TextUtils.isEmpty(sortOrder)) {
-				orderBy = Contents.CONTENTS_TABLE_DEFAULT_SORT_ORDER;
+				orderBy = Contents.DEFAULT_SORT_ORDER;
 			} else {
 				orderBy = sortOrder;
 			}
@@ -409,4 +404,7 @@ public class EpubReaderProvider extends ContentProvider {
 		return count;
 	}
 
+	public DatabaseHelper getDatabaseHelperForTest() {
+		return mDatabaseHelper;
+	}
 }
