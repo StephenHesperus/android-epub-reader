@@ -303,7 +303,7 @@ public class EpubReaderProvider extends ContentProvider {
 			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
 					+ " using ( " + Books.BOOK_ID + " )");
 			qb.setProjectionMap(sContentsProjectionMap);
-			qb.appendWhere(Contents._ID
+			qb.appendWhere(Contents.TABLE_NAME + "." + Contents._ID
 					+ " = "
 					+ uri.getPathSegments().get(
 							Contents.CONTENTS_ID_PATH_POSITION)
@@ -314,6 +314,8 @@ public class EpubReaderProvider extends ContentProvider {
 			} else {
 				orderBy = sortOrder;
 			}
+			break;
+
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
 		}
