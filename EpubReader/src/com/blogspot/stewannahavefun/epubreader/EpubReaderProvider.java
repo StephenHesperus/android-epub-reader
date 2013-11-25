@@ -26,7 +26,6 @@ public class EpubReaderProvider extends ContentProvider {
 	private static final int DATABASE_VERSION = 1;
 
 	private static HashMap<String, String> sBooksProjectionMap;
-	private static HashMap<String, String> sBookIdProjectionMap;
 	private static HashMap<String, String> sContentsProjectionMap;
 
 	private static final int BOOKS = 1;
@@ -46,6 +45,7 @@ public class EpubReaderProvider extends ContentProvider {
 		sBooksProjectionMap = new HashMap<String, String>();
 
 		sBooksProjectionMap.put(Books._ID, Books._ID);
+		sBooksProjectionMap.put(Books.BOOK_ID, Books.BOOK_ID);
 		sBooksProjectionMap.put(Books.TITLE, Books.TITLE);
 		sBooksProjectionMap.put(Books.AUTHOR, Books.AUTHOR);
 		sBooksProjectionMap.put(Books.PUBLISHER, Books.PUBLISHER);
@@ -53,21 +53,17 @@ public class EpubReaderProvider extends ContentProvider {
 		sBooksProjectionMap.put(Books.ADDED_DATE, Books.ADDED_DATE);
 		sBooksProjectionMap.put(Books.LAST_READING_DATE,
 				Books.LAST_READING_DATE);
-
-		sBookIdProjectionMap = new HashMap<String, String>();
-
-		sBookIdProjectionMap.put(Books._ID, Books._ID);
-		sBookIdProjectionMap.put(Books.BOOK_ID, Books.BOOK_ID);
-		sBookIdProjectionMap.put(Books.LAST_READING_POINT_NAVIGATION_LINK,
+		sBooksProjectionMap.put(Books.LAST_READING_POINT_NAVIGATION_LINK,
 				Books.LAST_READING_POINT_NAVIGATION_LINK);
-		sBookIdProjectionMap.put(Books.LAST_READING_POINT_PAGE_NUMBER,
+		sBooksProjectionMap.put(Books.LAST_READING_POINT_PAGE_NUMBER,
 				Books.LAST_READING_POINT_PAGE_NUMBER);
-		sBookIdProjectionMap.put(Books.LAST_READING_POINT_NAVIGATION_ORDER,
+		sBooksProjectionMap.put(Books.LAST_READING_POINT_NAVIGATION_ORDER,
 				Books.LAST_READING_POINT_NAVIGATION_ORDER);
 
 		sContentsProjectionMap = new HashMap<String, String>();
 
-		sContentsProjectionMap.put(Contents._ID, Contents._ID);
+		sContentsProjectionMap.put(Contents._ID, Contents.TABLE_NAME + "."
+				+ Contents._ID + " AS " + Contents._ID);
 		sContentsProjectionMap.put(Contents.NAVIGATION_LABEL,
 				Contents.NAVIGATION_LABEL);
 		sContentsProjectionMap
@@ -80,8 +76,31 @@ public class EpubReaderProvider extends ContentProvider {
 	}
 
 	static class DatabaseHelper extends SQLiteOpenHelper {
-		private static final String CREATE_BOOK_TABLE = "";
-		private static final String CREATE_CONTENTS_TABLE = "";
+		private static final String CREATE_BOOK_TABLE =
+				"CREATE TABLE " + Books.TABLE_NAME + " ( "
+						+ Books._ID + " INTEGER NOT NULL PRIMARY KEY, "
+						+ Books.BOOK_ID + " TEXT NOT NULL, "
+						+ Books.TITLE + " TEXT, "
+						+ Books.AUTHOR + " TEXT, "
+						+ Books.PUBLISHER + " TEXT, "
+						+ Books.COVER + " TEXT, "
+						+ Books.ADDED_DATE + " INTEGER, "
+						+ Books.LAST_READING_DATE + " INTEGER, "
+						+ Books.LAST_READING_POINT_NAVIGATION_LINK + " TEXT, "
+						+ Books.LAST_READING_POINT_PAGE_NUMBER + " INTEGER, "
+						+ Books.LAST_READING_POINT_NAVIGATION_ORDER
+						+ " INTEGER"
+						+ " );";
+		private static final String CREATE_CONTENTS_TABLE =
+				"CREATE TABLE " + Contents.TABLE_NAME + " ( "
+						+ Contents._ID + " INTEGER NOT NULL PRIMARY KEY, "
+						+ Contents.NAVIGATION_LABEL + " TEXT, "
+						+ Contents.NAVIGATION_LINK + " TEXT, "
+						+ Contents.NAVIGATION_ORDER + " TEXT, "
+						+ Contents.NAVIGATION_DEPTH + " TEXT, "
+						+ Contents.BOOK_ID + " TEXT NOT NULL REFERENCES "
+						+ Books.TABLE_NAME + " ( " + Books.BOOK_ID + " )"
+						+ " );";
 
 		public DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -91,6 +110,8 @@ public class EpubReaderProvider extends ContentProvider {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(CREATE_BOOK_TABLE);
 			db.execSQL(CREATE_CONTENTS_TABLE);
+			Log.d("books table", CREATE_BOOK_TABLE);
+			Log.d("contents table", CREATE_CONTENTS_TABLE);
 		}
 
 		@Override
@@ -99,8 +120,8 @@ public class EpubReaderProvider extends ContentProvider {
 					+ newVersion + ", which will destroy all old data");
 
 			// TODO: UPDATE DATABASE INSTEAD OF DESTROYING EXISTING DATA
-			db.execSQL("DROP TABLE IF EXISTS " + Books.BOOK_TABLE);
-			db.execSQL("DROP TABLE IF EXISTS " + Contents.CONTENTS_TABLE);
+			db.execSQL("DROP TABLE IF EXISTS " + Books.TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + Contents.TABLE_NAME);
 
 			onCreate(db);
 		}
@@ -117,7 +138,7 @@ public class EpubReaderProvider extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		case BOOKS:
 			count = db.delete(
-					Books.BOOK_TABLE,
+					Books.TABLE_NAME,
 					selection,
 					selectionArgs
 					);
@@ -132,7 +153,7 @@ public class EpubReaderProvider extends ContentProvider {
 			}
 
 			count = db.delete(
-					Books.BOOK_TABLE,
+					Books.TABLE_NAME,
 					finalWhere,
 					selectionArgs
 					);
@@ -140,7 +161,7 @@ public class EpubReaderProvider extends ContentProvider {
 
 		case CONTENTS:
 			count = db.delete(
-					Contents.CONTENTS_TABLE,
+					Contents.TABLE_NAME,
 					selection,
 					selectionArgs
 					);
@@ -157,7 +178,7 @@ public class EpubReaderProvider extends ContentProvider {
 			}
 
 			count = db.delete(
-					Contents.CONTENTS_TABLE,
+					Contents.TABLE_NAME,
 					finalWhere,
 					selectionArgs
 					);
@@ -214,11 +235,11 @@ public class EpubReaderProvider extends ContentProvider {
 		long id;
 		switch (sUriMatcher.match(uri)) {
 		case BOOKS:
-			id = db.insert(Books.BOOK_TABLE, null, values);
+			id = db.insert(Books.TABLE_NAME, null, values);
 			break;
 
 		case CONTENTS:
-			id = db.insert(Contents.CONTENTS_TABLE, null, values);
+			id = db.insert(Contents.TABLE_NAME, null, values);
 			break;
 
 		default:
@@ -252,7 +273,7 @@ public class EpubReaderProvider extends ContentProvider {
 
 		switch (sUriMatcher.match(uri)) {
 		case BOOKS:
-			qb.setTables(Books.BOOK_TABLE);
+			qb.setTables(Books.TABLE_NAME);
 			qb.setProjectionMap(sBooksProjectionMap);
 
 			if (TextUtils.isEmpty(sortOrder)) {
@@ -263,8 +284,8 @@ public class EpubReaderProvider extends ContentProvider {
 			break;
 
 		case BOOK_ID:
-			qb.setTables(Books.BOOK_TABLE);
-			qb.setProjectionMap(sBookIdProjectionMap);
+			qb.setTables(Books.TABLE_NAME);
+			qb.setProjectionMap(sBooksProjectionMap);
 			qb.appendWhere(Books._ID + " = "
 					+ uri.getPathSegments().get(Books.BOOK_ID_PATH_POSITION)
 					);
@@ -277,7 +298,7 @@ public class EpubReaderProvider extends ContentProvider {
 			break;
 
 		case CONTENTS:
-			qb.setTables(Books.BOOK_TABLE + " join " + Contents.CONTENTS_TABLE
+			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
 					+ " using ( " + Books.BOOK_ID + " )");
 			qb.setProjectionMap(sContentsProjectionMap);
 
@@ -289,7 +310,7 @@ public class EpubReaderProvider extends ContentProvider {
 			break;
 
 		case CONTENTS_ID:
-			qb.setTables(Books.BOOK_TABLE + " join " + Contents.CONTENTS_TABLE
+			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
 					+ " using ( " + Books.BOOK_ID + " )");
 			qb.setProjectionMap(sContentsProjectionMap);
 			qb.appendWhere(Contents._ID
@@ -334,7 +355,7 @@ public class EpubReaderProvider extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 		case BOOKS:
 			count = db.update(
-					Books.BOOK_TABLE,
+					Books.TABLE_NAME,
 					values,
 					selection,
 					selectionArgs
@@ -350,7 +371,7 @@ public class EpubReaderProvider extends ContentProvider {
 			}
 
 			count = db.update(
-					Books.BOOK_TABLE,
+					Books.TABLE_NAME,
 					values,
 					finalWhere,
 					selectionArgs
@@ -359,7 +380,7 @@ public class EpubReaderProvider extends ContentProvider {
 
 		case CONTENTS:
 			count = db.update(
-					Contents.CONTENTS_TABLE,
+					Contents.TABLE_NAME,
 					values,
 					selection,
 					selectionArgs
@@ -377,7 +398,7 @@ public class EpubReaderProvider extends ContentProvider {
 			}
 
 			count = db.update(
-					Contents.CONTENTS_TABLE,
+					Contents.TABLE_NAME,
 					values,
 					finalWhere,
 					selectionArgs
