@@ -15,7 +15,7 @@ public class EpubReaderActivity extends Activity {
 
 		WebView bookView = (WebView) findViewById(R.id.book_content);
 
-		String url = "file://" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/Documents/html/ch03s02.html";
+		String url = "file://" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/doc/hello-small.html";
 		bookView.loadUrl(url);
 	}
 
