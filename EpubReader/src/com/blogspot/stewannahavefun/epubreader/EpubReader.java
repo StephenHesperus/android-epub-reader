@@ -15,7 +15,7 @@ public class EpubReader {
 
 		}
 
-		public static final String BOOK_TABLE = "books";
+		public static final String TABLE_NAME = "books";
 
 		public static final String SCHEME = "content://";
 
@@ -54,7 +54,7 @@ public class EpubReader {
 
 		}
 
-		public static final String CONTENTS_TABLE = "contents";
+		public static final String TABLE_NAME = "contents";
 
 		public static final String SCHEME = "content://";
 
