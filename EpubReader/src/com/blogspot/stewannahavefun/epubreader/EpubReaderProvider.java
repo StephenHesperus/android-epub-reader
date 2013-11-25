@@ -288,8 +288,9 @@ public class EpubReaderProvider extends ContentProvider {
 			break;
 
 		case CONTENTS:
-			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
-					+ " using ( " + Books.BOOK_ID + " )");
+//			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
+//					+ " using ( " + Books.BOOK_ID + " )");
+			qb.setTables(Contents.TABLE_NAME);
 			qb.setProjectionMap(sContentsProjectionMap);
 
 			if (TextUtils.isEmpty(sortOrder)) {
@@ -300,8 +301,9 @@ public class EpubReaderProvider extends ContentProvider {
 			break;
 
 		case CONTENTS_ID:
-			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
-					+ " using ( " + Books.BOOK_ID + " )");
+//			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
+//					+ " using ( " + Books.BOOK_ID + " )");
+			qb.setTables(Contents.TABLE_NAME);
 			qb.setProjectionMap(sContentsProjectionMap);
 			qb.appendWhere(Contents.TABLE_NAME + "." + Contents._ID
 					+ " = "
