@@ -2,21 +2,37 @@ package com.blogspot.stewannahavefun.epubreader;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
-import android.webkit.WebView;
+import android.widget.GridView;
+
+import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
 public class EpubReaderActivity extends Activity {
+	private SimpleCursorAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_epub_reader);
 
-		WebView bookView = (WebView) findViewById(R.id.book_content);
+		int[] to = {
+				R.id.title,
+				R.id.author,
+				R.id.publisher,
+				R.id.added_date,
+				R.id.last_reading_date
+		};
 
-		String url = "file://" + Environment.getExternalStorageDirectory().getAbsolutePath() + "/Documents/html/ch03s02.html";
-		bookView.loadUrl(url);
+		mAdapter = new SimpleCursorAdapter(
+				this,
+				R.layout.book_list_item,
+				null,
+				EpubReader.BOOK_LIST_PROJECTION,
+				to,
+				0);
+
+		GridView bookList = (GridView) findViewById(R.id.book_list);
+		bookList.setAdapter(mAdapter);
 	}
 
 	@Override
