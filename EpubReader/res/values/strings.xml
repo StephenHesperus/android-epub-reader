@@ -2,7 +2,6 @@
 <resources>
 
 	<string name="app_name">Epub Reader</string>
-	<string name="hello_world">Hello world!</string>
 	<string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus posuere et neque hendrerit vehicula. Fusce eget urna tempor, fringilla velit ac, congue justo. Sed congue ut odio in aliquet. Ut blandit libero nisi. Nullam molestie velit et mi vestibulum, imperdiet auctor quam pharetra. Nunc id suscipit augue. Aliquam luctus, sapien nec pulvinar aliquam, eros nulla malesuada libero, at luctus nibh lectus et diam. Phasellus laoreet purus risus, at auctor magna interdum interdum. Vivamus nec nisi non eros consectetur egestas a id libero. Cras nec placerat lorem. Praesent sapien erat, condimentum non convallis non, cursus a arcu. Aliquam ornare lacinia eleifend. Donec dapibus, lectus vitae tincidunt venenatis, eros massa sollicitudin est, ullamcorper varius purus lacus et orci. Cras varius ornare neque a euismod. Suspendisse a est eu nunc sodales pellentesque eget eget mi. Quisque vitae nibh nisl.\n\nSed eleifend, metus vel ultricies tempus, purus dui sagittis tortor, a tristique massa ipsum sit amet ligula. Nam ut elit a urna luctus condimentum ac at neque. Donec ultrices dui vel arcu elementum lacinia. Suspendisse sodales est ac pulvinar dictum. Phasellus eget ipsum blandit, laoreet diam sit amet, tincidunt nisi. Nullam ultricies lacus id enim volutpat, ac fermentum magna aliquet. Nullam imperdiet metus ac nibh ullamcorper, bibendum blandit mauris tincidunt. Mauris volutpat, diam in semper viverra, lacus turpis tincidunt tortor, vitae rutrum nisi arcu posuere odio. Nam ut dignissim nulla. Phasellus rhoncus tincidunt magna, eget faucibus nisl eleifend non. Aenean nec nulla vestibulum, lacinia urna et, egestas justo. Praesent in scelerisque velit. Aenean rhoncus nibh nisi, eu feugiat erat mattis at. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</string>
 
 	<!-- book list activity -->
@@ -16,5 +15,8 @@
 	<string name="action_settings">Settings</string>
 	<string name="action_help">Help</string>
 	<string name="action_about">About</string>
+	<!-- reading activity -->
+	<string name="navigation_header">Contents</string>
+	<string name="alt_navigation_item">Navigation</string>
 
 </resources>
