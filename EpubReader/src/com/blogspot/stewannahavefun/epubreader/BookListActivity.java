@@ -12,14 +12,14 @@ import android.widget.SimpleCursorAdapter;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
-public class EpubReaderActivity extends Activity implements
+public class BookListActivity extends Activity implements
 		LoaderCallbacks<Cursor> {
 	private SimpleCursorAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_epub_reader);
+		setContentView(R.layout.activity_book_list);
 
 		int[] to = {
 				R.id.title,
