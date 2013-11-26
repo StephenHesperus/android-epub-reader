@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/reading_drawer_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<FrameLayout
+		android:id="@+id/reading_frame"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="16dp" >
+
+		<WebView
+			android:id="@+id/book_view"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+	</FrameLayout>
+
+	<RelativeLayout
+		android:id="@+id/navigation_drawer"
+		android:layout_width="240dp"
+		android:layout_height="match_parent"
+		android:background="#fff" >
+
+		<TextView
+			android:id="@+id/navigation_header"
+			style="?android:attr/listSeparatorTextViewStyle"
+			android:paddingLeft="16dp"
+			android:text="@string/navigation_header" />
+
+		<ListView
+			android:id="@+id/navigation_list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_below="@id/navigation_header"
+			android:choiceMode="singleChoice" />
+	</RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>
