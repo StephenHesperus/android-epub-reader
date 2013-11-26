@@ -22,6 +22,14 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity
+			android:name="com.blogspot.stewannahavefun.epubreader.ReadingActivity"
+			android:label="@string/title_activity_reading"
+			android:parentActivityName="com.blogspot.stewannahavefun.epubreader.BookListActivity" >
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.blogspot.stewannahavefun.epubreader.BookListActivity" />
+		</activity>
 	</application>
 
 </manifest>
