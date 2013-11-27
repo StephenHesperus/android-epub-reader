@@ -38,12 +38,19 @@ public class ProcessEpubFileService extends IntentService {
 
 		boolean success = unzipEpubFile(epub, output);
 	}
+	
+	private boolean checkExternalStorageWritable() {
+		if (Environment.MEDIA_MOUNTED.equals(Environment
+				.getExternalStorageState()))
+			return true;
+		else
+			return false;
+	}
 
 	private boolean unzipEpubFile(File epub, File outputDir) {
 		boolean unzipSuccess = false;
 		
-		if (!Environment.MEDIA_MOUNTED.equals(Environment
-				.getExternalStorageState()))
+		if (!checkExternalStorageWritable())
 			return unzipSuccess;
 
 		try {
