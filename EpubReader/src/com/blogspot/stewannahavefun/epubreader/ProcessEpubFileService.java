@@ -7,21 +7,35 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import java.nio.channels.FileChannel;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 
 public class ProcessEpubFileService extends IntentService {
 	private static final String TAG = "PROCESS_EPUB_FILE_SERVICE";
 	private static final String MIMETYPE_FILE = "mimetype";
 	private static final String MIMETYPE = "application/epub+zip";
+	private static final String CONTAINER_DOT_XML = "META-INF/container.xml";
+	private static final String ROOT;
+	private static final String EPUB_DIRECTORY;
+
+	static {
+		ROOT = Environment.getExternalStorageDirectory().getAbsolutePath();
+		EPUB_DIRECTORY = ROOT + File.separator + "epubreader/data";
+	}
 
 	public ProcessEpubFileService() {
 		super(TAG);
@@ -49,7 +63,7 @@ public class ProcessEpubFileService extends IntentService {
 
 	private boolean unzipEpubFile(File epub, File outputDir) {
 		boolean unzipSuccess = false;
-		
+
 		if (!checkExternalStorageWritable())
 			return unzipSuccess;
 
@@ -113,13 +127,13 @@ public class ProcessEpubFileService extends IntentService {
 
 	}
 
-	private void backupEpubFile(File epub, File output) {	
+	private void backupEpubFile(File epub, File output) {
 		try {
 			FileInputStream is = new FileInputStream(epub);
 			FileChannel in = is.getChannel();
 			FileOutputStream os = new FileOutputStream(output);
 			FileChannel out = os.getChannel();
-			
+
 			in.transferTo(0, in.size(), out);
 			out.close();
 			in.close();
@@ -132,4 +146,27 @@ public class ProcessEpubFileService extends IntentService {
 		}
 	}
 
+	private String readContainerDotXmlFile(String epubDir) {
+		final String ROOT_FILE = "rootfile";
+		final String FULL_PATH = "full-path";
+		File container = new File(epubDir, CONTAINER_DOT_XML);
+		String fullPath = "";
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document doc = builder.parse(container);
+			Element rootfile = (Element) doc.getElementsByTagName(ROOT_FILE)
+					.item(0);
+			fullPath = rootfile.getAttribute(FULL_PATH);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return fullPath;
+	}
+	
 }
