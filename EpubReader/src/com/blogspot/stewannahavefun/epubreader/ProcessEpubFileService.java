@@ -112,4 +112,24 @@ public class ProcessEpubFileService extends IntentService {
 	private class UnsupportedFileTypeException extends Exception {
 
 	}
+
+	private void backupEpubFile(File epub, File output) {	
+		try {
+			FileInputStream is = new FileInputStream(epub);
+			FileChannel in = is.getChannel();
+			FileOutputStream os = new FileOutputStream(output);
+			FileChannel out = os.getChannel();
+			
+			in.transferTo(0, in.size(), out);
+			out.close();
+			in.close();
+			is.close();
+			os.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
