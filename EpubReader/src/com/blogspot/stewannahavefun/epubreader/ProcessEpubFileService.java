@@ -168,5 +168,39 @@ public class ProcessEpubFileService extends IntentService {
 
 		return fullPath;
 	}
-	
+
+	private String readOPFFile(File opf) {
+		final String SPINE = "spine";
+		final String TOC = "toc";
+		final String HREF = "href";
+		
+		String ncxPath = null;
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document doc = builder.parse(opf);
+			
+			// metadata
+			
+			
+			// mainfest
+			
+			// spine, look for NCX file path
+			Element spine = (Element) doc.getElementsByTagName(SPINE).item(0);
+			String ncxId = spine.getAttribute(TOC);
+			Element ncx = doc.getElementById(ncxId);
+			ncxPath = ncx.getAttribute(HREF);
+			
+			// guide
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ncxPath;
+	}
 }
