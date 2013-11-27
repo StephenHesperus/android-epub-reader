@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -17,12 +18,19 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+
+import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
 
 public class ProcessEpubFileService extends IntentService {
 	private static final String TAG = "PROCESS_EPUB_FILE_SERVICE";
@@ -202,5 +210,88 @@ public class ProcessEpubFileService extends IntentService {
 		}
 		
 		return ncxPath;
+	}
+
+	private void readNCXFile(File ncx) {
+		final String META = "meta";
+		final String NAME = "name";
+		final String UID = "dtb:uid";
+		final String NAVPOINT = "navPoint";
+		final String PLAYORDER = "playOrder";
+		final String SRC = "src";
+		final String TEXT = "text";
+		final String CONTENT = "content";
+
+		ArrayList<String> depthList = new ArrayList<String>();
+		try {
+			// get depth list
+			FileInputStream is = new FileInputStream(ncx);
+			XmlPullParserFactory fac = XmlPullParserFactory.newInstance();
+			XmlPullParser parser = fac.newPullParser();
+
+			fac.setNamespaceAware(true);
+			parser.setInput(is, "utf-8");
+
+			depthList.clear();
+			int eventType = parser.getEventType();
+			while (eventType != XmlPullParser.END_DOCUMENT) {
+				if (eventType == XmlPullParser.START_TAG
+						&& parser.getName().equals(NAVPOINT)) {
+					depthList.add(parser.getDepth() + "");
+				}
+
+				eventType = parser.next();
+			}
+			is.close();
+
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document doc = builder.parse(ncx);
+
+			// get book id
+			String BOOK_ID = null;
+			NodeList metaList = doc.getElementsByTagName(META);
+			if (metaList != null && metaList.getLength() > 0) {
+				for (int i = 0; i < metaList.getLength(); i++) {
+					Element meta = (Element) metaList.item(i);
+					if (meta.getAttribute(NAME).equals(UID)) {
+						BOOK_ID = meta.getAttribute(CONTENT);
+					}
+				}
+			}
+
+			// get table of contents
+			NodeList navPointList = doc.getElementsByTagName(NAVPOINT);
+			if (navPointList != null && navPointList.getLength() > 0) {
+				for (int i = 0; i < navPointList.getLength(); i++) {
+					Element navPoint = (Element) navPointList.item(i);
+					Element textE = (Element) navPoint
+							.getElementsByTagName(TEXT).item(0);
+					Element contentE = (Element) navPoint.getElementsByTagName(
+							CONTENT).item(0);
+					String playOrder = navPoint.getAttribute(PLAYORDER);
+					String text = textE.getTextContent();
+					String src = contentE.getAttribute(SRC);
+
+					ContentValues v = new ContentValues();
+
+					v.put(Contents.NAVIGATION_LABEL, text);
+					v.put(Contents.NAVIGATION_LINK, src);
+					v.put(Contents.NAVIGATION_DEPTH, depthList.get(i));
+					v.put(Contents.NAVIGATION_ORDER, playOrder);
+					v.put(Contents.BOOK_ID, BOOK_ID);
+
+					getContentResolver().insert(Contents.CONTENTS_URI, v);
+				}
+			}
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		}
 	}
 }
