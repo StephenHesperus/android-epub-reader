@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -18,6 +20,8 @@ import android.util.Log;
 
 public class ProcessEpubFileService extends IntentService {
 	private static final String TAG = "PROCESS_EPUB_FILE_SERVICE";
+	private static final String MIMETYPE_FILE = "mimetype";
+	private static final String MIMETYPE = "application/epub+zip";
 
 	public ProcessEpubFileService() {
 		super(TAG);
@@ -36,16 +40,20 @@ public class ProcessEpubFileService extends IntentService {
 	}
 
 	private void unzipEpubFile(File epub, File outputDir) {
-		if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
-			return ;
-		
+		if (!Environment.MEDIA_MOUNTED.equals(Environment
+				.getExternalStorageState()))
+			return;
+
 		try {
 			FileInputStream is = new FileInputStream(epub);
 			ZipInputStream zis = new ZipInputStream(
 					new BufferedInputStream(is));
 			ZipEntry ze;
+			boolean mimetypeCorrect = false;
 
-			while ((ze = zis.getNextEntry()) != null) {
+			ze = zis.getNextEntry();
+
+			do {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				byte[] buffer = new byte[1024];
 				int count;
@@ -56,22 +64,39 @@ public class ProcessEpubFileService extends IntentService {
 
 				String filename = ze.getName();
 				byte[] bytes = baos.toByteArray();
+
+				if (!mimetypeCorrect) {
+					if (filename.equals(MIMETYPE_FILE)
+							&& baos.toString().equals(MIMETYPE)) {
+						mimetypeCorrect = true;
+					} else {
+						throw new UnsupportedFileTypeException();
+					}
+				}
+
 				File file = new File(outputDir + File.separator + filename);
-				
+
 				(new File(file.getParent())).mkdirs();
-				
+
 				FileOutputStream fos = new FileOutputStream(file);
-				
+
 				fos.write(bytes);
 				fos.close();
 				baos.close();
-			}
+			} while ((ze = zis.getNextEntry()) != null && mimetypeCorrect);
 
 			zis.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (UnsupportedFileTypeException e) {
+			e.printStackTrace();
+			// TODO: inform UI the file is not supported
 		}
+	}
+
+	private class UnsupportedFileTypeException extends Exception {
+
 	}
 }
