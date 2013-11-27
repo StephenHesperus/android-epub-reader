@@ -36,13 +36,15 @@ public class ProcessEpubFileService extends IntentService {
 		String epubDir = root + epub.getName();
 		File output = new File(epubDir);
 
-		unzipEpubFile(epub, output);
+		boolean success = unzipEpubFile(epub, output);
 	}
 
-	private void unzipEpubFile(File epub, File outputDir) {
+	private boolean unzipEpubFile(File epub, File outputDir) {
+		boolean unzipSuccess = false;
+		
 		if (!Environment.MEDIA_MOUNTED.equals(Environment
 				.getExternalStorageState()))
-			return;
+			return unzipSuccess;
 
 		try {
 			FileInputStream is = new FileInputStream(epub);
@@ -86,6 +88,7 @@ public class ProcessEpubFileService extends IntentService {
 			} while ((ze = zis.getNextEntry()) != null && mimetypeCorrect);
 
 			zis.close();
+			unzipSuccess = true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -93,7 +96,10 @@ public class ProcessEpubFileService extends IntentService {
 		} catch (UnsupportedFileTypeException e) {
 			e.printStackTrace();
 			// TODO: inform UI the file is not supported
+			unzipSuccess = false;
 		}
+
+		return unzipSuccess;
 	}
 
 	private class UnsupportedFileTypeException extends Exception {
