@@ -15,7 +15,7 @@ public class EpubReader {
 
 		}
 
-		public static final String BOOK_TABLE = "books";
+		public static final String TABLE_NAME = "books";
 
 		public static final String SCHEME = "content://";
 
@@ -45,7 +45,7 @@ public class EpubReader {
 		public static final String LAST_READING_POINT_NAVIGATION_ORDER = "last_reading_point_navigation_order";
 		public static final String LAST_READING_POINT_PAGE_NUMBER = "last_reading_point_page_number";
 
-		public static final String BOOK_TABLE_DEFAULT_SORT_ORDER = LAST_READING_DATE
+		public static final String DEFAULT_SORT_ORDER = LAST_READING_DATE
 				+ ", " + ADDED_DATE + " DESC";
 	}
 
@@ -54,7 +54,7 @@ public class EpubReader {
 
 		}
 
-		public static final String CONTENTS_TABLE = "contents";
+		public static final String TABLE_NAME = "contents";
 
 		public static final String SCHEME = "content://";
 
@@ -79,7 +79,7 @@ public class EpubReader {
 		public static final String NAVIGATION_LINK = "navigation_link";
 		public static final String BOOK_ID = "book_id";
 
-		public static final String CONTENTS_TABLE_DEFAULT_SORT_ORDER = Contents.NAVIGATION_ORDER
+		public static final String DEFAULT_SORT_ORDER = Contents.NAVIGATION_ORDER
 				+ " ASC";
 	}
 
@@ -96,7 +96,8 @@ public class EpubReader {
 			Books._ID,
 			Books.LAST_READING_POINT_NAVIGATION_LINK, // 7
 			Books.LAST_READING_POINT_PAGE_NUMBER, // 8
-			Books.LAST_READING_POINT_NAVIGATION_ORDER // 9
+			Books.LAST_READING_POINT_NAVIGATION_ORDER, // 9
+			Books.BOOK_ID
 	};
 	public static final String[] CONTENTS_PROJECTION = new String[] {
 			Contents._ID, // 0
