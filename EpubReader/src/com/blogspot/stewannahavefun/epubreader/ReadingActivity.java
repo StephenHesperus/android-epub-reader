@@ -1,17 +1,25 @@
 package com.blogspot.stewannahavefun.epubreader;
 
+import java.io.File;
+
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
 
 public class ReadingActivity extends Activity {
 	private DrawerLayout mDrawerLayout;
@@ -21,6 +29,10 @@ public class ReadingActivity extends Activity {
 
 	private String mNavigationDrawerTitle;
 	private String mActivityTitle;
+
+	private String EPUB_LOCATION;
+
+	private static final String SCHEME = "file://";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +69,48 @@ public class ReadingActivity extends Activity {
 				};
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+				GravityCompat.START);
+
+		mNavigationList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int pos,
+					long id) {
+				onNavigationLabelClick(id);
+			}
+		});
+
+		Bundle args = getIntent().getExtras();
+		String link = args.getString(EpubReader.READ_BOOK_PROJECTION[1]);
+		int pageNumber = args.getInt(EpubReader.READ_BOOK_PROJECTION[2]);
+		int playOrder = args.getInt(EpubReader.READ_BOOK_PROJECTION[3]);
+		String bookId = args.getString(EpubReader.READ_BOOK_PROJECTION[4]);
+		String location = args.getString(EpubReader.READ_BOOK_PROJECTION[5]);
+
+		EPUB_LOCATION = location;
+
+		String url = constructUrl(link);
+		mBookView.loadUrl(url);
+		// TODO: restore last reading location, using JavaScript
+		mNavigationList.setItemChecked(playOrder, true);
+
+	}
+
+	private void onNavigationLabelClick(long id) {
+		Uri navigation = ContentUris.withAppendedId(
+				Contents.CONTENTS_ID_URI_BASE, id);
+		Cursor c = getContentResolver().query(
+				navigation,
+				EpubReader.CONTENTS_ITEM_PROJECTION,
+				null, null, null);
+		String link = c.getString(1);
+
+		mBookView.loadUrl(constructUrl(link));
+	}
+	
+	private String constructUrl(String link) {
+		return SCHEME + EPUB_LOCATION + File.separator + link;
 	}
 
 	@Override
@@ -82,14 +135,14 @@ public class ReadingActivity extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		
+
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		
+
 		mDrawerToggle.syncState();
 	}
 
