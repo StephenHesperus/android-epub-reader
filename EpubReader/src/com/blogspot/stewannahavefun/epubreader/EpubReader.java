@@ -44,6 +44,7 @@ public class EpubReader {
 		public static final String LAST_READING_POINT_NAVIGATION_LINK = "last_reading_point_navigation_link";
 		public static final String LAST_READING_POINT_NAVIGATION_ORDER = "last_reading_point_navigation_order";
 		public static final String LAST_READING_POINT_PAGE_NUMBER = "last_reading_point_page_number";
+		public static final String LOCATION = "location";
 
 		public static final String DEFAULT_SORT_ORDER = LAST_READING_DATE
 				+ ", " + ADDED_DATE + " DESC";
@@ -97,7 +98,8 @@ public class EpubReader {
 			Books.LAST_READING_POINT_NAVIGATION_LINK, // 7
 			Books.LAST_READING_POINT_PAGE_NUMBER, // 8
 			Books.LAST_READING_POINT_NAVIGATION_ORDER, // 9
-			Books.BOOK_ID
+			Books.BOOK_ID,
+			Books.LOCATION
 	};
 	public static final String[] CONTENTS_PROJECTION = new String[] {
 			Contents._ID, // 0
