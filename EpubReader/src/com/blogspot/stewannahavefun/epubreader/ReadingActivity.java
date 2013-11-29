@@ -3,7 +3,10 @@ package com.blogspot.stewannahavefun.epubreader;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,19 +21,25 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
+import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
 
-public class ReadingActivity extends Activity {
+public class ReadingActivity extends Activity implements
+		LoaderCallbacks<Cursor> {
 	private DrawerLayout mDrawerLayout;
 	private ListView mNavigationList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private WebView mBookView;
 
+	private SimpleCursorAdapter mAdapter;
+
 	private String mNavigationDrawerTitle;
 	private String mActivityTitle;
 
 	private String EPUB_LOCATION;
+	private String BOOK_ID;
 
 	private static final String SCHEME = "file://";
 
@@ -85,7 +94,7 @@ public class ReadingActivity extends Activity {
 		String link = args.getString(EpubReader.READ_BOOK_PROJECTION[1]);
 		int pageNumber = args.getInt(EpubReader.READ_BOOK_PROJECTION[2]);
 		int playOrder = args.getInt(EpubReader.READ_BOOK_PROJECTION[3]);
-		String bookId = args.getString(EpubReader.READ_BOOK_PROJECTION[4]);
+		BOOK_ID = args.getString(EpubReader.READ_BOOK_PROJECTION[4]);
 		String location = args.getString(EpubReader.READ_BOOK_PROJECTION[5]);
 
 		EPUB_LOCATION = location;
@@ -144,6 +153,29 @@ public class ReadingActivity extends Activity {
 		super.onPostCreate(savedInstanceState);
 
 		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		String selection = Books.BOOK_ID + " = " + BOOK_ID;
+		
+		return new CursorLoader(
+				this,
+				Contents.CONTENTS_URI,
+				EpubReader.CONTENTS_PROJECTION,
+				selection,
+				null,
+				null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+		mAdapter.swapCursor(c);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAdapter.swapCursor(null);
 	}
 
 }
