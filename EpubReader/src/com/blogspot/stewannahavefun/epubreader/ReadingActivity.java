@@ -5,6 +5,7 @@ import java.io.File;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.content.res.Configuration;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
@@ -81,6 +83,10 @@ public class ReadingActivity extends Activity implements
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 
+		String[] from = { Contents.NAVIGATION_LABEL, Contents.NAVIGATION_DEPTH };
+		int[] to = { R.id.navigation_item, R.id.navigation_item };
+
+		mAdapter = new NavigationAdapter(this, from, to);
 		mNavigationList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -117,7 +123,7 @@ public class ReadingActivity extends Activity implements
 
 		mBookView.loadUrl(constructUrl(link));
 	}
-	
+
 	private String constructUrl(String link) {
 		return SCHEME + EPUB_LOCATION + File.separator + link;
 	}
@@ -158,7 +164,7 @@ public class ReadingActivity extends Activity implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		String selection = Books.BOOK_ID + " = " + BOOK_ID;
-		
+
 		return new CursorLoader(
 				this,
 				Contents.CONTENTS_URI,
@@ -178,4 +184,43 @@ public class ReadingActivity extends Activity implements
 		mAdapter.swapCursor(null);
 	}
 
+	private class NavigationAdapter extends SimpleCursorAdapter {
+
+		public NavigationAdapter(Context context, String[] from, int[] to) {
+			super(context, R.layout.navigation_list_item, null, from, to, 0);
+
+			setViewBinder(new ViewBinder() {
+
+				@Override
+				public boolean setViewValue(View view, Cursor cursor,
+						int columnIndex) {
+					TextView labelView = (TextView) view;
+
+					switch (columnIndex) {
+					case 1:
+						String text = cursor.getString(columnIndex);
+						labelView.setText(text);
+						break;
+
+					case 3:
+						int depth = cursor.getInt(columnIndex);
+						int oldLeftPadding = labelView.getPaddingLeft();
+						int newLeftPadding = oldLeftPadding * depth;
+						labelView.setPadding(
+								newLeftPadding,
+								labelView.getPaddingTop(),
+								labelView.getPaddingRight(),
+								labelView.getPaddingBottom());
+						break;
+
+					default:
+						break;
+					}
+
+					return true;
+				}
+			});
+		}
+
+	}
 }
