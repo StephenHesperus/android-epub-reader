@@ -23,7 +23,7 @@ public class EpubReaderProvider extends ContentProvider {
 	private static final String TAG = "EpubReaderProvider";
 
 	private static final String DATABASE_NAME = "epub_reader.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	private static HashMap<String, String> sBooksProjectionMap;
 	private static HashMap<String, String> sContentsProjectionMap;
@@ -59,6 +59,7 @@ public class EpubReaderProvider extends ContentProvider {
 				Books.LAST_READING_POINT_PAGE_NUMBER);
 		sBooksProjectionMap.put(Books.LAST_READING_POINT_NAVIGATION_ORDER,
 				Books.LAST_READING_POINT_NAVIGATION_ORDER);
+		sBooksProjectionMap.put(Books.LOCATION, Books.LOCATION);
 
 		sContentsProjectionMap = new HashMap<String, String>();
 
@@ -89,7 +90,8 @@ public class EpubReaderProvider extends ContentProvider {
 						+ Books.LAST_READING_POINT_NAVIGATION_LINK + " TEXT, "
 						+ Books.LAST_READING_POINT_PAGE_NUMBER + " INTEGER, "
 						+ Books.LAST_READING_POINT_NAVIGATION_ORDER
-						+ " INTEGER"
+						+ " INTEGER, "
+						+ Books.LOCATION + " TEXT NOT NULL"
 						+ " );";
 		private static final String CREATE_CONTENTS_TABLE =
 				"CREATE TABLE " + Contents.TABLE_NAME + " ( "
@@ -288,8 +290,8 @@ public class EpubReaderProvider extends ContentProvider {
 			break;
 
 		case CONTENTS:
-//			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
-//					+ " using ( " + Books.BOOK_ID + " )");
+			// qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
+			// + " using ( " + Books.BOOK_ID + " )");
 			qb.setTables(Contents.TABLE_NAME);
 			qb.setProjectionMap(sContentsProjectionMap);
 
@@ -301,8 +303,8 @@ public class EpubReaderProvider extends ContentProvider {
 			break;
 
 		case CONTENTS_ID:
-//			qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
-//					+ " using ( " + Books.BOOK_ID + " )");
+			// qb.setTables(Books.TABLE_NAME + " join " + Contents.TABLE_NAME
+			// + " using ( " + Books.BOOK_ID + " )");
 			qb.setTables(Contents.TABLE_NAME);
 			qb.setProjectionMap(sContentsProjectionMap);
 			qb.appendWhere(Contents.TABLE_NAME + "." + Contents._ID

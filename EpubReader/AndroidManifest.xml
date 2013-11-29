@@ -41,6 +41,12 @@
 			android:enabled="true"
 			android:exported="false" >
 		</service>
+
+		<provider
+			android:name="com.blogspot.stewannahavefun.epubreader.EpubReaderProvider"
+			android:authorities="com.blogspot.stewannahavefun.epubreader.provider"
+			android:exported="false" >
+		</provider>
 	</application>
 
 </manifest>
