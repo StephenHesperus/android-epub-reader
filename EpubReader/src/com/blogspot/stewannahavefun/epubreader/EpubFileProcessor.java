@@ -12,4 +12,11 @@ public class EpubFileProcessor {
 		mOutput = output;
 	}
 
+	public static class UnsupportedFileException extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public UnsupportedFileException(String msg) {
+			super(msg);
+		}
+	}
 }
