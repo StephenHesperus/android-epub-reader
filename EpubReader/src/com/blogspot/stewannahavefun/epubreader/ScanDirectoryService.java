@@ -1,7 +1,6 @@
 package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
-import java.io.FilenameFilter;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -20,13 +19,7 @@ public class ScanDirectoryService extends IntentService {
 
 		String dirPath = data.getPath();
 		File dir = new File(dirPath);
-		File[] epubFileList = dir.listFiles(new FilenameFilter() {
-
-			@Override
-			public boolean accept(File dir, String filename) {
-				return filename.endsWith(".epub");
-			}
-		});
+		File[] epubFileList = DirectoryScanner.filterEpubFile(dir);
 
 		for (File epub : epubFileList) {
 			Intent process = new Intent(this, ProcessEpubFileService.class);
