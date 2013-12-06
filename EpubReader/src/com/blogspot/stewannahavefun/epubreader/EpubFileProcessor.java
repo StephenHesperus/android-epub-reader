@@ -4,7 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -92,5 +95,32 @@ public class EpubFileProcessor {
 		public UnsupportedFileException(String msg) {
 			super(msg);
 		}
+	}
+
+	public String backupEpubFile() {
+		File backupOutput = new File(mOutput, mEpub.getName());
+		String path = null;
+		try {
+			FileInputStream is = new FileInputStream(mEpub);
+			FileChannel in = is.getChannel();
+			FileOutputStream os = new FileOutputStream(backupOutput);
+			FileChannel out = os.getChannel();
+
+			in.transferTo(0, in.size(), out);
+			out.close();
+			in.close();
+			is.close();
+			os.close();
+
+			path = backupOutput.getAbsolutePath();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			path = null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			path = null;
+		}
+
+		return path;
 	}
 }
