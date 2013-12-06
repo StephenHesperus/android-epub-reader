@@ -4,9 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -75,11 +73,13 @@ public class EpubFileProcessor {
 
 			zis.close();
 			unzipSuccess = true;
-		} catch (FileNotFoundException e) {
-			throw new UnsupportedFileException(e.getMessage());
-		} catch (IOException e) {
-			throw new UnsupportedFileException(e.getMessage());
-		} catch (UnsupportedFileException e) {
+		} catch (Exception e) {
+			File[] nonSence = mOutput.listFiles();
+			for (File file : nonSence) {
+				file.delete();
+			}
+			mOutput.delete();
+
 			throw new UnsupportedFileException(e.getMessage());
 		}
 
