@@ -21,6 +21,16 @@ import org.xml.sax.SAXException;
 
 public class EpubFileProcessor {
 
+	public class OpfFileIsNullException extends Exception {
+
+		private static final long serialVersionUID = -2L;
+
+		public OpfFileIsNullException(String detailMessage) {
+			super(detailMessage);
+		}
+
+	}
+
 	private static final String MIMETYPE = "application/epub+zip";
 	private static final Object MIMETYPE_FILE = "mimetype";
 	private static final String CONTAINER_DOT_XML = "META-INF/container.xml";
