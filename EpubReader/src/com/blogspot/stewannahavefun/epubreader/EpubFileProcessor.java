@@ -11,10 +11,19 @@ import java.nio.channels.FileChannel;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 public class EpubFileProcessor {
 
 	private static final String MIMETYPE = "application/epub+zip";
 	private static final Object MIMETYPE_FILE = "mimetype";
+	private static final String CONTAINER_DOT_XML = "META-INF/container.xml";
 	private File mEpub;
 	private File mOutput;
 
@@ -122,5 +131,28 @@ public class EpubFileProcessor {
 		}
 
 		return path;
+	}
+
+	public String readContainerDotXmlFile() {
+		final String ROOT_FILE = "rootfile";
+		final String FULL_PATH = "full-path";
+		File container = new File(mOutput, CONTAINER_DOT_XML);
+		String fullPath = null;
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+					.newDocumentBuilder();
+			Document doc = builder.parse(container);
+			Element rootfile = (Element) doc.getElementsByTagName(ROOT_FILE)
+					.item(0);
+			fullPath = rootfile.getAttribute(FULL_PATH);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return fullPath;
 	}
 }
