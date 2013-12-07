@@ -19,6 +19,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import android.content.ContentValues;
+
+import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
+
 public class EpubFileProcessor {
 
 	public class OpfFileIsNullException extends Exception {
@@ -37,6 +41,18 @@ public class EpubFileProcessor {
 	private File mEpub;
 	private File mOutput;
 	private File mOpf;
+	private File mNcx;
+
+	private static final String SPINE = "spine";
+	private static final String TOC = "toc";
+	private static final String HREF = "href";
+	private static final String ID = "identifier";
+	private static final String TITLE = "title";
+	private static final String AUTHOR = "creator";
+	private static final String DC_NS = "http://purl.org/dc/elements/1.1/";
+	private static final String PUBLISHER = "publisher";
+	private static final String COVER = "cover";
+	private static final String NCX_PATH = "NCX_PATH";
 
 	public EpubFileProcessor(File epub, File output) {
 		mEpub = epub;
@@ -167,5 +183,73 @@ public class EpubFileProcessor {
 		mOpf = new File(mOutput, fullPath);
 
 		return fullPath;
+	}
+
+	public ContentValues readOpfFile() throws OpfFileIsNullException {
+
+		ContentValues bookInfo = new ContentValues();
+
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			factory.setNamespaceAware(true);
+
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = null;
+			if (mOpf != null) {
+				doc = builder.parse(mOpf);
+			} else {
+				throw new OpfFileIsNullException(
+						"You should get the .opf file path first. Use readContainerDotXmlFile().");
+			}
+
+			// metadata
+			String title = doc.getElementsByTagNameNS(DC_NS, TITLE).item(0)
+					.getTextContent();
+			String author = doc.getElementsByTagNameNS(DC_NS, AUTHOR).item(0)
+					.getTextContent();
+			String publisher = doc.getElementsByTagNameNS(DC_NS, PUBLISHER)
+					.item(0).getTextContent();
+			String cover = doc.getElementById(COVER).getAttribute(HREF);
+			String bookId = doc.getElementsByTagNameNS(DC_NS, ID).item(0)
+					.getTextContent();
+
+			// .ncx file
+			Element spine = (Element) doc.getElementsByTagName(SPINE).item(0);
+			String ncxId = spine.getAttribute(TOC);
+			Element ncx = doc.getElementById(ncxId);
+			String ncxPath = ncx.getAttribute(HREF);
+
+			// manifest file path base segement
+			String location = mOpf.getParentFile().getAbsolutePath();
+
+			// construct bookInfo
+			bookInfo.put(Books.TITLE, title);
+			bookInfo.put(Books.AUTHOR, author);
+			bookInfo.put(Books.PUBLISHER, publisher);
+			bookInfo.put(Books.COVER, cover);
+
+			bookInfo.put(Books.ADDED_DATE, System.currentTimeMillis());
+			bookInfo.put(Books.LAST_READING_DATE, System.currentTimeMillis());
+
+			bookInfo.put(Books.LAST_READING_POINT_NAVIGATION_LINK, "");
+			bookInfo.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, 0);
+			bookInfo.put(Books.LAST_READING_POINT_PAGE_NUMBER, 0);
+
+			bookInfo.put(Books.BOOK_ID, bookId);
+			bookInfo.put(Books.LOCATION, location);
+
+			bookInfo.put(NCX_PATH, ncxPath);
+
+			mNcx = new File(location, ncxPath);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return bookInfo;
 	}
 }
