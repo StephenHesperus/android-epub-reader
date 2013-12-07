@@ -36,6 +36,7 @@ public class EpubFileProcessor {
 	private static final String CONTAINER_DOT_XML = "META-INF/container.xml";
 	private File mEpub;
 	private File mOutput;
+	private File mOpf;
 
 	public EpubFileProcessor(File epub, File output) {
 		mEpub = epub;
@@ -162,6 +163,8 @@ public class EpubFileProcessor {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		mOpf = new File(mOutput, fullPath);
 
 		return fullPath;
 	}
