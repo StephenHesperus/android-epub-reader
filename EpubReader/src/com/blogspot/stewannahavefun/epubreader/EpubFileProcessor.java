@@ -25,13 +25,14 @@ import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
 public class EpubFileProcessor {
 
-	public class OpfFileIsNullException extends Exception {
-
-		private static final long serialVersionUID = -2L;
-
-		public OpfFileIsNullException(String detailMessage) {
-			super(detailMessage);
+	public class FileIsNotConstructedException extends Exception {
+		public FileIsNotConstructedException(String msg) {
+			super(msg);
 		}
+
+		private static final long serialVersionUID = 3L;
+
+	}
 
 	}
 
@@ -185,7 +186,7 @@ public class EpubFileProcessor {
 		return fullPath;
 	}
 
-	public ContentValues readOpfFile() throws OpfFileIsNullException {
+	public ContentValues readOpfFile() throws FileIsNotConstructedException {
 
 		ContentValues bookInfo = new ContentValues();
 
@@ -199,7 +200,7 @@ public class EpubFileProcessor {
 			if (mOpf != null) {
 				doc = builder.parse(mOpf);
 			} else {
-				throw new OpfFileIsNullException(
+				throw new FileIsNotConstructedException(
 						"You should get the .opf file path first. Use readContainerDotXmlFile().");
 			}
 
