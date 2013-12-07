@@ -23,7 +23,7 @@ import android.content.ContentValues;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
-public class EpubFileProcessor {
+public abstract class EpubFileProcessor {
 
 	public class FileIsNotConstructedException extends Exception {
 		public FileIsNotConstructedException(String msg) {
@@ -253,4 +253,6 @@ public class EpubFileProcessor {
 
 		return bookInfo;
 	}
+
+	public abstract void getContentValues(ContentValues v);
 }
