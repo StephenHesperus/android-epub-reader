@@ -51,7 +51,7 @@
 			android:textColor="?android:attr/textColorSecondary"
 			android:textSize="12sp" />
 
-		<TextView
+		<com.blogspot.stewannahavefun.epubreader.DateTextView
 			android:id="@+id/added_date"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
 			android:textColor="?android:attr/textColorSecondary"
 			android:textSize="12sp" />
 
-		<TextView
+		<com.blogspot.stewannahavefun.epubreader.DateTextView
 			android:id="@+id/last_reading_date"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
