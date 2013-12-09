@@ -117,7 +117,7 @@ public abstract class EpubFileProcessor {
 
 			zis.close();
 			unzipSuccess = true;
-		} catch (Exception e) {
+		} catch (UnsupportedFileException e) {
 			File[] nonSence = mOutput.listFiles();
 			for (File file : nonSence) {
 				file.delete();
@@ -125,6 +125,10 @@ public abstract class EpubFileProcessor {
 			mOutput.delete();
 
 			throw new UnsupportedFileException(e.getMessage());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return unzipSuccess;
