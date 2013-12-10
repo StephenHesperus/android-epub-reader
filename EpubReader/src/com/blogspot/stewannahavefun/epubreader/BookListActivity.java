@@ -53,6 +53,8 @@ public class BookListActivity extends Activity implements
 				onBookClick(id);
 			}
 		});
+		
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	private void onBookClick(final long id) {
@@ -73,6 +75,13 @@ public class BookListActivity extends Activity implements
 		reading.putExtras(args);
 		
 		startActivity(reading);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
