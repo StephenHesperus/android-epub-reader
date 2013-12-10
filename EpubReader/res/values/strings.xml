@@ -25,4 +25,7 @@
 	<string name="navigation_drawer_open">Show Contents</string>
 	<string name="navigation_drawer_close">Hide Contents</string>
 
+	<!-- booklist menu -->
+	<string name="action_open">Open</string>
+
 </resources>
