@@ -84,7 +84,6 @@ public class BookListActivity extends Activity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		// TODO Auto-generated method stub
 		return new CursorLoader(
 				this,
 				Books.BOOKS_URI,
