@@ -15,11 +15,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.ViewBinder;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
 public class BookListActivity extends Activity implements
 		LoaderCallbacks<Cursor> {
+
 	private SimpleCursorAdapter mAdapter;
 
 	@Override
@@ -42,6 +44,29 @@ public class BookListActivity extends Activity implements
 				EpubReader.BOOK_LIST_PROJECTION,
 				to,
 				0);
+
+		SimpleCursorAdapter.ViewBinder binder = new ViewBinder() {
+
+			@Override
+			public boolean setViewValue(View view, Cursor cursor,
+					int columnIndex) {
+				String column = cursor.getColumnName(columnIndex);
+
+				if (column.equals(Books.ADDED_DATE)
+						|| column.equals(Books.LAST_READING_DATE)) {
+					DateTextView dateTextView = (DateTextView) view;
+					long ms = cursor.getLong(columnIndex);
+
+					dateTextView.setDate(ms);
+
+					return true;
+				}
+
+				return false;
+			}
+		};
+
+		mAdapter.setViewBinder(binder);
 
 		GridView bookList = (GridView) findViewById(R.id.book_list);
 		bookList.setAdapter(mAdapter);
