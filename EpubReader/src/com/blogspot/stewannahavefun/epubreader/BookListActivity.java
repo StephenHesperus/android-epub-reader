@@ -15,11 +15,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.ViewBinder;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
 public class BookListActivity extends Activity implements
 		LoaderCallbacks<Cursor> {
+
 	private SimpleCursorAdapter mAdapter;
 
 	@Override
@@ -43,6 +45,29 @@ public class BookListActivity extends Activity implements
 				to,
 				0);
 
+		SimpleCursorAdapter.ViewBinder binder = new ViewBinder() {
+
+			@Override
+			public boolean setViewValue(View view, Cursor cursor,
+					int columnIndex) {
+				String column = cursor.getColumnName(columnIndex);
+
+				if (column.equals(Books.ADDED_DATE)
+						|| column.equals(Books.LAST_READING_DATE)) {
+					DateTextView dateTextView = (DateTextView) view;
+					long ms = cursor.getLong(columnIndex);
+
+					dateTextView.setDate(ms);
+
+					return true;
+				}
+
+				return false;
+			}
+		};
+
+		mAdapter.setViewBinder(binder);
+
 		GridView bookList = (GridView) findViewById(R.id.book_list);
 		bookList.setAdapter(mAdapter);
 		bookList.setOnItemClickListener(new OnItemClickListener() {
@@ -53,6 +78,8 @@ public class BookListActivity extends Activity implements
 				onBookClick(id);
 			}
 		});
+
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	private void onBookClick(final long id) {
@@ -61,18 +88,25 @@ public class BookListActivity extends Activity implements
 				bookIdUri,
 				EpubReader.READ_BOOK_PROJECTION,
 				null, null, null);
-		
+
 		Bundle args = new Bundle();
 		args.putString(EpubReader.READ_BOOK_PROJECTION[1], c.getString(1));
 		args.putInt(EpubReader.READ_BOOK_PROJECTION[2], c.getInt(2));
 		args.putInt(EpubReader.READ_BOOK_PROJECTION[3], c.getInt(3));
 		args.putString(EpubReader.READ_BOOK_PROJECTION[4], c.getString(4));
 		args.putString(EpubReader.READ_BOOK_PROJECTION[5], c.getString(5));
-		
+
 		Intent reading = new Intent(this, ReadingActivity.class);
 		reading.putExtras(args);
-		
+
 		startActivity(reading);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
@@ -84,7 +118,6 @@ public class BookListActivity extends Activity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		// TODO Auto-generated method stub
 		return new CursorLoader(
 				this,
 				Books.BOOKS_URI,
