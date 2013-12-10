@@ -78,7 +78,7 @@ public class BookListActivity extends Activity implements
 				onBookClick(id);
 			}
 		});
-		
+
 		getLoaderManager().initLoader(0, null, this);
 	}
 
@@ -88,24 +88,24 @@ public class BookListActivity extends Activity implements
 				bookIdUri,
 				EpubReader.READ_BOOK_PROJECTION,
 				null, null, null);
-		
+
 		Bundle args = new Bundle();
 		args.putString(EpubReader.READ_BOOK_PROJECTION[1], c.getString(1));
 		args.putInt(EpubReader.READ_BOOK_PROJECTION[2], c.getInt(2));
 		args.putInt(EpubReader.READ_BOOK_PROJECTION[3], c.getInt(3));
 		args.putString(EpubReader.READ_BOOK_PROJECTION[4], c.getString(4));
 		args.putString(EpubReader.READ_BOOK_PROJECTION[5], c.getString(5));
-		
+
 		Intent reading = new Intent(this, ReadingActivity.class);
 		reading.putExtras(args);
-		
+
 		startActivity(reading);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		getLoaderManager().restartLoader(0, null, this);
 	}
 
