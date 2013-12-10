@@ -112,7 +112,7 @@ public class BookListActivity extends Activity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.epub_reader, menu);
+		getMenuInflater().inflate(R.menu.booklist, menu);
 		return true;
 	}
 
