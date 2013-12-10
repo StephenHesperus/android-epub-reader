@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,6 +23,7 @@ import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 public class BookListActivity extends Activity implements
 		LoaderCallbacks<Cursor> {
 
+	private static final String DIALOG_OPEN_EPUB_FILE = "DIALOG_OPEN_EPUB_FILE";
 	private SimpleCursorAdapter mAdapter;
 
 	@Override
@@ -114,6 +116,20 @@ public class BookListActivity extends Activity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.booklist, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_open:
+			FilePickerDialog dialog = new FilePickerDialog();
+			dialog.show(getFragmentManager(), DIALOG_OPEN_EPUB_FILE);
+
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
