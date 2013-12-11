@@ -93,6 +93,14 @@ public class EpubReader {
 			Books.ADDED_DATE, // 5
 			Books.LAST_READING_DATE, // 6
 	};
+	public static final String[] BOOK_LIST_FROM = new String[] {
+			Books.TITLE, // 1
+			Books.AUTHOR, // 2
+			Books.PUBLISHER, // 3
+			Books.COVER, // 4
+			Books.ADDED_DATE, // 5
+			Books.LAST_READING_DATE, // 6
+	};
 	public static final String[] READ_BOOK_PROJECTION = new String[] {
 			Books._ID,
 			Books.LAST_READING_POINT_NAVIGATION_LINK, // 7
