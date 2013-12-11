@@ -107,8 +107,18 @@ public class ReadingActivity extends Activity implements
 		}
 	}
 
-	private void prepareReadingSession(String bookId) {
-		mBookId = bookId;
+	private void prepareReadingSession(long id) {
+		Uri current = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, id);
+		Cursor c = getContentResolver().query(
+				current,
+				EpubReader.READ_BOOK_PROJECTION,
+				null, null, null);
+
+		if (c != null && c.moveToFirst()) {
+			mLocationBase = c.getString(c.getColumnIndex(Books.LOCATION));
+			mBookId = c.getString(c.getColumnIndex(Books.BOOK_ID));
+		}
+
 		getLoaderManager().initLoader(0, null, this);
 	}
 
