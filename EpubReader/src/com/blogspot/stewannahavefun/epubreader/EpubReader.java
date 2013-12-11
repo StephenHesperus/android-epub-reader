@@ -119,6 +119,7 @@ public class EpubReader {
 	};
 	public static final String[] CONTENTS_ITEM_PROJECTION = new String[] {
 			Contents._ID, // 0
+			Contents.NAVIGATION_LABEL, // 1
 			Contents.NAVIGATION_LINK, // 2
 	};
 }
