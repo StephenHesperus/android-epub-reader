@@ -4,7 +4,6 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -101,20 +100,9 @@ public class BookListActivity extends Activity implements
 	}
 
 	private void onBookClick(final long id) {
-		Uri bookIdUri = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, id);
-		Cursor c = getContentResolver().query(
-				bookIdUri,
-				new String[] { Books.BOOK_ID },
-				null,
-				null,
-				null);
-
 		Intent reading = new Intent(this, ReadingActivity.class);
 
-		if (c != null && c.moveToFirst()) {
-			reading.putExtra(Books.BOOK_ID, c.getString(0));
-		}
-
+		reading.putExtra(Books._ID, id);
 		startActivity(reading);
 	}
 
