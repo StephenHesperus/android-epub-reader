@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -91,6 +92,7 @@ public class ReadingActivity extends Activity implements
 
 		mAdapter = new NavigationAdapter(this, from, to);
 		mNavigationList.setAdapter(mAdapter);
+		mNavigationList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		mNavigationList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
