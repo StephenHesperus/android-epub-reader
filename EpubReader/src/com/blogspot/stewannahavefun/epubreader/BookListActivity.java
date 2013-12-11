@@ -27,6 +27,8 @@ public class BookListActivity extends Activity implements
 		LoaderCallbacks<Cursor>, FilePickerDialog.OnFilePickListener {
 
 	private static final String DIALOG_OPEN_EPUB_FILE = "DIALOG_OPEN_EPUB_FILE";
+	protected static final String SUFFIX_ADDED_DATE = "Added";
+	protected static final String SUFFIX_LAST_READING_DATE = "Last Read";
 	private SimpleCursorAdapter mAdapter;
 
 	@Override
@@ -61,8 +63,11 @@ public class BookListActivity extends Activity implements
 						|| column.equals(Books.LAST_READING_DATE)) {
 					DateTextView dateTextView = (DateTextView) view;
 					long ms = cursor.getLong(columnIndex);
+					String suffix = column.equals(Books.ADDED_DATE)
+							? SUFFIX_ADDED_DATE
+							: SUFFIX_LAST_READING_DATE;
 
-					dateTextView.setDate(ms);
+					dateTextView.setDate(ms, suffix);
 
 					return true;
 				}
