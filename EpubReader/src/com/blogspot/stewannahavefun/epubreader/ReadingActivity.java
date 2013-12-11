@@ -213,6 +213,10 @@ public class ReadingActivity extends Activity implements
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		mAdapter.swapCursor(c);
+
+		mNavigationList.setItemChecked(mLastOrder - 1, true);
+		onNavigationLabelClick(mNavigationList
+				.getItemIdAtPosition(mLastOrder - 1));
 	}
 
 	@Override
