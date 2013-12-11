@@ -99,7 +99,12 @@ public class ReadingActivity extends Activity implements
 			}
 		});
 
+		Intent start = getIntent();
 
+		if (start.hasExtra(Books.BOOK_ID)) {
+			prepareReadingSession(start.getStringExtra(Books.BOOK_ID));
+		}
+	}
 
 	private void prepareReadingSession(String bookId) {
 		Bundle args = new Bundle();
