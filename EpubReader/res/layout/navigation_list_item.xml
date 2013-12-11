@@ -3,6 +3,7 @@
 	android:id="@+id/navigation_item"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
+	android:background="?android:attr/activatedBackgroundIndicator"
 	android:padding="4dp"
 	android:paddingLeft="32dp"
 	android:paddingRight="32dp"
