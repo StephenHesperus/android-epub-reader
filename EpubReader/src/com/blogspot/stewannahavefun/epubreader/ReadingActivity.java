@@ -44,6 +44,7 @@ public class ReadingActivity extends Activity implements
 	private String mActivityTitle;
 
 	private String EPUB_LOCATION;
+	private String mBookId;
 
 	private static final String SCHEME = "file://";
 
@@ -106,10 +107,8 @@ public class ReadingActivity extends Activity implements
 	}
 
 	private void prepareReadingSession(String bookId) {
-		Bundle args = new Bundle();
-
-		args.putString(Books.BOOK_ID, bookId);
-		getLoaderManager().initLoader(0, args, this);
+		mBookId = bookId;
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	private void onNavigationLabelClick(long id) {
@@ -163,8 +162,7 @@ public class ReadingActivity extends Activity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String bookId = args.getString(Books.BOOK_ID);
-		String selection = Books.BOOK_ID + " = " + "'" + bookId + "'";
+		String selection = Books.BOOK_ID + " = " + "'" + mBookId + "'";
 
 		return new CursorLoader(
 				this,
