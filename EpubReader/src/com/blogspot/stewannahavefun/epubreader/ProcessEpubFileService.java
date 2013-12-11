@@ -40,6 +40,16 @@ public class ProcessEpubFileService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		if (intent.hasExtra(EXTRA_EPUB_PATH)
+				|| intent.hasExtra(EXTRA_OUTPUT_DIRECTORY)) {
+			try {
+				throw new Exception(
+						"Legacy parameter, it does nothing now. Use setData Uri from File, that will be all.");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		Uri data = intent.getData();
 		File epub = new File(data.getPath());
 		File base = new File(mBase);
