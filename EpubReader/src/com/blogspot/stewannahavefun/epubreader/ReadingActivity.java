@@ -7,6 +7,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -98,20 +99,13 @@ public class ReadingActivity extends Activity implements
 			}
 		});
 
-		Bundle args = getIntent().getExtras();
-		String link = args.getString(EpubReader.READ_BOOK_PROJECTION[1]);
-		int pageNumber = args.getInt(EpubReader.READ_BOOK_PROJECTION[2]);
-		int playOrder = args.getInt(EpubReader.READ_BOOK_PROJECTION[3]);
-		BOOK_ID = args.getString(EpubReader.READ_BOOK_PROJECTION[4]);
-		String location = args.getString(EpubReader.READ_BOOK_PROJECTION[5]);
 
-		EPUB_LOCATION = location;
 
-		String url = constructUrl(link);
-		mBookView.loadUrl(url);
-		// TODO: restore last reading location, using JavaScript
-		mNavigationList.setItemChecked(playOrder, true);
+	private void prepareReadingSession(String bookId) {
+		Bundle args = new Bundle();
 
+		args.putString(Books.BOOK_ID, bookId);
+		getLoaderManager().initLoader(0, args, this);
 	}
 
 	private void onNavigationLabelClick(long id) {
