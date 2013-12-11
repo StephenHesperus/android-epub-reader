@@ -104,18 +104,16 @@ public class BookListActivity extends Activity implements
 		Uri bookIdUri = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, id);
 		Cursor c = getContentResolver().query(
 				bookIdUri,
-				EpubReader.READ_BOOK_PROJECTION,
-				null, null, null);
-
-		Bundle args = new Bundle();
-		args.putString(EpubReader.READ_BOOK_PROJECTION[1], c.getString(1));
-		args.putInt(EpubReader.READ_BOOK_PROJECTION[2], c.getInt(2));
-		args.putInt(EpubReader.READ_BOOK_PROJECTION[3], c.getInt(3));
-		args.putString(EpubReader.READ_BOOK_PROJECTION[4], c.getString(4));
-		args.putString(EpubReader.READ_BOOK_PROJECTION[5], c.getString(5));
+				new String[] { Books.BOOK_ID },
+				null,
+				null,
+				null);
 
 		Intent reading = new Intent(this, ReadingActivity.class);
-		reading.putExtras(args);
+
+		if (c != null && c.moveToFirst()) {
+			reading.putExtra(Books.BOOK_ID, c.getString(0));
+		}
 
 		startActivity(reading);
 	}
