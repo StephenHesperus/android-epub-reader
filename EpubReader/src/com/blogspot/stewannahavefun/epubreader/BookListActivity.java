@@ -40,6 +40,7 @@ public class BookListActivity extends Activity implements
 				R.id.title,
 				R.id.author,
 				R.id.publisher,
+				R.id.cover,
 				R.id.added_date,
 				R.id.last_reading_date
 		};
@@ -48,7 +49,7 @@ public class BookListActivity extends Activity implements
 				this,
 				R.layout.book_list_item,
 				null,
-				EpubReader.BOOK_LIST_PROJECTION,
+				EpubReader.BOOK_LIST_FROM,
 				to,
 				0);
 
