@@ -15,9 +15,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -84,7 +86,7 @@ public class ReadingActivity extends Activity implements
 				GravityCompat.START);
 
 		String[] from = { Contents.NAVIGATION_LABEL, Contents.NAVIGATION_DEPTH };
-		int[] to = { R.id.navigation_item, R.id.navigation_item };
+		int[] to = { R.id.navigation_item };
 
 		mAdapter = new NavigationAdapter(this, from, to);
 		mNavigationList.setOnItemClickListener(new OnItemClickListener() {
@@ -188,38 +190,33 @@ public class ReadingActivity extends Activity implements
 
 		public NavigationAdapter(Context context, String[] from, int[] to) {
 			super(context, R.layout.navigation_list_item, null, from, to, 0);
+		}
 
-			setViewBinder(new ViewBinder() {
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			String label = cursor.getString(cursor
+					.getColumnIndex(Contents.NAVIGATION_LABEL));
+			int depth = cursor.getInt(cursor
+					.getColumnIndex(Contents.NAVIGATION_DEPTH));
+			TextView navItemView = (TextView) view;
+			int initialPaddingLeft = navItemView.getPaddingLeft();
+			int newPaddingLeft = initialPaddingLeft * depth;
+			int top = navItemView.getPaddingTop();
+			int right = navItemView.getPaddingRight();
+			int bottom = navItemView.getPaddingBottom();
 
-				@Override
-				public boolean setViewValue(View view, Cursor cursor,
-						int columnIndex) {
-					TextView labelView = (TextView) view;
+			navItemView.setText(label);
+			navItemView.setPadding(newPaddingLeft, top, right, bottom);
+		}
 
-					switch (columnIndex) {
-					case 1:
-						String text = cursor.getString(columnIndex);
-						labelView.setText(text);
-						break;
+		@Override
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			LayoutInflater inflater = LayoutInflater.from(context);
+			TextView textView = (TextView) inflater.inflate(
+					R.layout.navigation_list_item,
+					null);
 
-					case 3:
-						int depth = cursor.getInt(columnIndex);
-						int oldLeftPadding = labelView.getPaddingLeft();
-						int newLeftPadding = oldLeftPadding * depth;
-						labelView.setPadding(
-								newLeftPadding,
-								labelView.getPaddingTop(),
-								labelView.getPaddingRight(),
-								labelView.getPaddingBottom());
-						break;
-
-					default:
-						break;
-					}
-
-					return true;
-				}
-			});
+			return textView;
 		}
 
 	}
