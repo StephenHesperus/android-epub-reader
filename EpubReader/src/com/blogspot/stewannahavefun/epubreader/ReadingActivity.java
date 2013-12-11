@@ -90,6 +90,7 @@ public class ReadingActivity extends Activity implements
 		int[] to = { R.id.navigation_item };
 
 		mAdapter = new NavigationAdapter(this, from, to);
+		mNavigationList.setAdapter(mAdapter);
 		mNavigationList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
