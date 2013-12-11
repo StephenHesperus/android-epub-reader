@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 
@@ -69,6 +70,12 @@ public class BookListActivity extends Activity implements
 							: SUFFIX_LAST_READING_DATE;
 
 					dateTextView.setDate(ms, suffix);
+
+					return true;
+				} else if (column.equals(Books.COVER)) {
+					ImageView cover = (ImageView) view;
+
+					cover.setImageResource(R.drawable.ic_epub_cover);
 
 					return true;
 				}
