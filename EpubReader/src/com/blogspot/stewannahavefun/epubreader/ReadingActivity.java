@@ -44,7 +44,6 @@ public class ReadingActivity extends Activity implements
 	private String mActivityTitle;
 
 	private String EPUB_LOCATION;
-	private String BOOK_ID;
 
 	private static final String SCHEME = "file://";
 
