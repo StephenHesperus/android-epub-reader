@@ -139,13 +139,18 @@ public class ReadingActivity extends Activity implements
 				EpubReader.CONTENTS_ITEM_PROJECTION,
 				null, null, null);
 
-		String link = "";
 		if (c != null && c.moveToFirst()) {
-			link = c.getString(c
+			String link = c.getString(c
 					.getColumnIndex(Contents.NAVIGATION_LINK));
-		}
+			String label = c.getString(c
+					.getColumnIndex(Contents.NAVIGATION_LABEL));
 
-		mBookView.loadUrl(constructUrl(link));
+			mActivityTitle = label;
+			mBookView.loadUrl(constructUrl(link));
+
+			mLastOrder = c.getInt(c
+					.getColumnIndex(Contents.NAVIGATION_ORDER));
+		}
 	}
 
 	private String constructUrl(String link) {
