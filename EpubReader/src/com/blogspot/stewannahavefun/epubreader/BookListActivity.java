@@ -1,8 +1,11 @@
 package com.blogspot.stewannahavefun.epubreader;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -17,11 +20,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.widget.Toast;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
 public class BookListActivity extends Activity implements
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, FilePickerDialog.OnFilePickListener {
 
 	private static final String DIALOG_OPEN_EPUB_FILE = "DIALOG_OPEN_EPUB_FILE";
 	private SimpleCursorAdapter mAdapter;
@@ -149,6 +153,15 @@ public class BookListActivity extends Activity implements
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
 		mAdapter.swapCursor(null);
+	}
+
+	@Override
+	public void onFilePick(Context context, File file) {
+		Intent process = new Intent(BookListActivity.this,
+				ProcessEpubFileService.class);
+
+		process.setData(Uri.fromFile(file));
+		context.startService(process);
 	}
 
 }
