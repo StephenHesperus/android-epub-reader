@@ -98,8 +98,8 @@ public class EpubReaderProvider extends ContentProvider {
 						+ Contents._ID + " INTEGER NOT NULL PRIMARY KEY, "
 						+ Contents.NAVIGATION_LABEL + " TEXT, "
 						+ Contents.NAVIGATION_LINK + " TEXT, "
-						+ Contents.NAVIGATION_ORDER + " TEXT, "
-						+ Contents.NAVIGATION_DEPTH + " TEXT, "
+						+ Contents.NAVIGATION_ORDER + " INTEGER, "
+						+ Contents.NAVIGATION_DEPTH + " INTEGER, "
 						+ Contents.BOOK_ID + " TEXT NOT NULL REFERENCES "
 						+ Books.TABLE_NAME + " ( " + Books.BOOK_ID + " )"
 						+ " );";
