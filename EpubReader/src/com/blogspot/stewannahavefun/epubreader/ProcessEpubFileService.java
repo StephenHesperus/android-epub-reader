@@ -33,6 +33,8 @@ public class ProcessEpubFileService extends IntentService {
 	private static final String EXTRA_EPUB_PATH = "EXTRA_EPUB_PATH";
 	private static final String EXTRA_OUTPUT_DIRECTORY = "EXTRA_OUTPUT_DIRECTORY";
 	private static final String NCX_PATH = "NCX_PATH";
+	private static final String ACTION_DUPLICATION = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION";
+	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
 	private final String mBase = Environment.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
 	private String mBookId;
@@ -57,6 +59,14 @@ public class ProcessEpubFileService extends IntentService {
 		File epub = new File(data.getPath());
 		File base = new File(mBase);
 		File output = new File(base, epub.getName());
+
+		if (output.isDirectory()) {
+			Intent duplication = new Intent(ACTION_DUPLICATION);
+
+			duplication.putExtra(ACTION_DUPLICATION_EXTRA, epub.getName());
+			sendBroadcast(duplication);
+			return;
+		}
 
 		output.mkdir();
 

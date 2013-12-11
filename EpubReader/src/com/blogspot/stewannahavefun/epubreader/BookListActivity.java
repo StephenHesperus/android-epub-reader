@@ -4,9 +4,11 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,16 +22,35 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.widget.Toast;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
 public class BookListActivity extends Activity implements
 		LoaderCallbacks<Cursor>, FilePickerDialog.OnFilePickListener {
 
+	private class ProcessorReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (ACTION_DUPLICATION.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_DUPLICATION_EXTRA);
+				String msg = filename + " already exists!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+			}
+		}
+
+	}
+
 	private static final String DIALOG_OPEN_EPUB_FILE = "DIALOG_OPEN_EPUB_FILE";
 	protected static final String SUFFIX_ADDED_DATE = "Added";
 	protected static final String SUFFIX_LAST_READING_DATE = "Last Read";
+	private static final String ACTION_DUPLICATION = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION";
+	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
 	private SimpleCursorAdapter mAdapter;
+	private ProcessorReceiver mReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +132,19 @@ public class BookListActivity extends Activity implements
 		super.onResume();
 
 		getLoaderManager().restartLoader(0, null, this);
+
+		IntentFilter filter = new IntentFilter();
+		mReceiver = new ProcessorReceiver();
+
+		filter.addAction(ACTION_DUPLICATION);
+		registerReceiver(mReceiver, filter);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		unregisterReceiver(mReceiver);
 	}
 
 	@Override
@@ -161,5 +195,4 @@ public class BookListActivity extends Activity implements
 		process.setData(Uri.fromFile(file));
 		context.startService(process);
 	}
-
 }
