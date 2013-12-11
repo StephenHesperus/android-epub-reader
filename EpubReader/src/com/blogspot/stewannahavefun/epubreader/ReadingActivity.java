@@ -7,6 +7,7 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -15,9 +16,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -40,8 +43,8 @@ public class ReadingActivity extends Activity implements
 	private String mNavigationDrawerTitle;
 	private String mActivityTitle;
 
-	private String EPUB_LOCATION;
-	private String BOOK_ID;
+	private String mLocationBase;
+	private String mBookId;
 
 	private static final String SCHEME = "file://";
 
@@ -84,9 +87,10 @@ public class ReadingActivity extends Activity implements
 				GravityCompat.START);
 
 		String[] from = { Contents.NAVIGATION_LABEL, Contents.NAVIGATION_DEPTH };
-		int[] to = { R.id.navigation_item, R.id.navigation_item };
+		int[] to = { R.id.navigation_item };
 
 		mAdapter = new NavigationAdapter(this, from, to);
+		mNavigationList.setAdapter(mAdapter);
 		mNavigationList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -96,20 +100,26 @@ public class ReadingActivity extends Activity implements
 			}
 		});
 
-		Bundle args = getIntent().getExtras();
-		String link = args.getString(EpubReader.READ_BOOK_PROJECTION[1]);
-		int pageNumber = args.getInt(EpubReader.READ_BOOK_PROJECTION[2]);
-		int playOrder = args.getInt(EpubReader.READ_BOOK_PROJECTION[3]);
-		BOOK_ID = args.getString(EpubReader.READ_BOOK_PROJECTION[4]);
-		String location = args.getString(EpubReader.READ_BOOK_PROJECTION[5]);
+		Intent start = getIntent();
 
-		EPUB_LOCATION = location;
+		if (start.hasExtra(Books._ID)) {
+			prepareReadingSession(start.getLongExtra(Books._ID, 1));
+		}
+	}
 
-		String url = constructUrl(link);
-		mBookView.loadUrl(url);
-		// TODO: restore last reading location, using JavaScript
-		mNavigationList.setItemChecked(playOrder, true);
+	private void prepareReadingSession(long id) {
+		Uri current = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, id);
+		Cursor c = getContentResolver().query(
+				current,
+				EpubReader.READ_BOOK_PROJECTION,
+				null, null, null);
 
+		if (c != null && c.moveToFirst()) {
+			mLocationBase = c.getString(c.getColumnIndex(Books.LOCATION));
+			mBookId = c.getString(c.getColumnIndex(Books.BOOK_ID));
+		}
+
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	private void onNavigationLabelClick(long id) {
@@ -119,13 +129,25 @@ public class ReadingActivity extends Activity implements
 				navigation,
 				EpubReader.CONTENTS_ITEM_PROJECTION,
 				null, null, null);
-		String link = c.getString(1);
+
+		String link = "";
+		if (c != null && c.moveToFirst()) {
+			link = c.getString(c
+					.getColumnIndex(Contents.NAVIGATION_LINK));
+		}
 
 		mBookView.loadUrl(constructUrl(link));
 	}
 
 	private String constructUrl(String link) {
-		return SCHEME + EPUB_LOCATION + File.separator + link;
+		return SCHEME + mLocationBase + File.separator + link;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
@@ -163,7 +185,7 @@ public class ReadingActivity extends Activity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String selection = Books.BOOK_ID + " = " + BOOK_ID;
+		String selection = Books.BOOK_ID + " = " + "'" + mBookId + "'";
 
 		return new CursorLoader(
 				this,
@@ -186,40 +208,46 @@ public class ReadingActivity extends Activity implements
 
 	private class NavigationAdapter extends SimpleCursorAdapter {
 
+		private int mDepth;
+		private int mLeft;
+		private int mPadding;
+		private int mPaddingRight;
+
 		public NavigationAdapter(Context context, String[] from, int[] to) {
 			super(context, R.layout.navigation_list_item, null, from, to, 0);
+		}
 
-			setViewBinder(new ViewBinder() {
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			String label = cursor.getString(cursor
+					.getColumnIndex(Contents.NAVIGATION_LABEL));
+			int depth = cursor.getInt(cursor
+					.getColumnIndex(Contents.NAVIGATION_DEPTH));
 
-				@Override
-				public boolean setViewValue(View view, Cursor cursor,
-						int columnIndex) {
-					TextView labelView = (TextView) view;
+			TextView navItemView = (TextView) view;
 
-					switch (columnIndex) {
-					case 1:
-						String text = cursor.getString(columnIndex);
-						labelView.setText(text);
-						break;
+			if (cursor.isFirst()) {
+				mDepth = depth;
+			}
 
-					case 3:
-						int depth = cursor.getInt(columnIndex);
-						int oldLeftPadding = labelView.getPaddingLeft();
-						int newLeftPadding = oldLeftPadding * depth;
-						labelView.setPadding(
-								newLeftPadding,
-								labelView.getPaddingTop(),
-								labelView.getPaddingRight(),
-								labelView.getPaddingBottom());
-						break;
+			int newPaddingLeft = mLeft * (depth - mDepth + 1) * 2;
+			navItemView.setText(label);
+			navItemView.setPadding(newPaddingLeft,
+					mPadding, mPaddingRight, mPadding);
+		}
 
-					default:
-						break;
-					}
+		@Override
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			LayoutInflater inflater = LayoutInflater.from(context);
+			TextView textView = (TextView) inflater.inflate(
+					R.layout.navigation_list_item,
+					null);
 
-					return true;
-				}
-			});
+			mLeft = textView.getPaddingLeft();
+			mPadding = textView.getPaddingTop();
+			mPaddingRight = textView.getPaddingRight();
+
+			return textView;
 		}
 
 	}

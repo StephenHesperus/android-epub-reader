@@ -5,7 +5,7 @@
 	android:layout_height="wrap_content"
 	android:padding="4dp"
 	android:paddingLeft="32dp"
-	android:paddingRight="56dp"
+	android:paddingRight="32dp"
 	android:text="@string/alt_navigation_item"
 	android:textColor="?android:attr/textColorPrimary"
 	android:textSize="14sp" />

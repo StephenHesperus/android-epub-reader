@@ -4,7 +4,6 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -101,22 +100,9 @@ public class BookListActivity extends Activity implements
 	}
 
 	private void onBookClick(final long id) {
-		Uri bookIdUri = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, id);
-		Cursor c = getContentResolver().query(
-				bookIdUri,
-				EpubReader.READ_BOOK_PROJECTION,
-				null, null, null);
-
-		Bundle args = new Bundle();
-		args.putString(EpubReader.READ_BOOK_PROJECTION[1], c.getString(1));
-		args.putInt(EpubReader.READ_BOOK_PROJECTION[2], c.getInt(2));
-		args.putInt(EpubReader.READ_BOOK_PROJECTION[3], c.getInt(3));
-		args.putString(EpubReader.READ_BOOK_PROJECTION[4], c.getString(4));
-		args.putString(EpubReader.READ_BOOK_PROJECTION[5], c.getString(5));
-
 		Intent reading = new Intent(this, ReadingActivity.class);
-		reading.putExtras(args);
 
+		reading.putExtra(Books._ID, id);
 		startActivity(reading);
 	}
 

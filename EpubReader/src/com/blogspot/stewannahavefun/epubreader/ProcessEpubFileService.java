@@ -22,6 +22,8 @@ public class ProcessEpubFileService extends IntentService {
 
 		@Override
 		public void getContentValues(ContentValues v) {
+			v.put(Contents.BOOK_ID, mBookId);
+
 			getContentResolver().insert(Contents.CONTENTS_URI, v);
 		}
 
@@ -33,6 +35,7 @@ public class ProcessEpubFileService extends IntentService {
 	private static final String NCX_PATH = "NCX_PATH";
 	private final String mBase = Environment.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
+	private String mBookId;
 
 	public ProcessEpubFileService() {
 		super(TAG);
@@ -69,6 +72,8 @@ public class ProcessEpubFileService extends IntentService {
 				ContentValues bookInfo = processor.readOpfFile();
 				bookInfo.remove(NCX_PATH);
 				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+
+				mBookId = bookInfo.getAsString(Books.BOOK_ID);
 
 				processor.readNcxFile();
 			}
