@@ -46,6 +46,7 @@ public class ReadingActivity extends Activity implements
 
 	private String mLocationBase;
 	private String mBookId;
+	private int mLastOrder;
 
 	private static final String SCHEME = "file://";
 
@@ -119,6 +120,12 @@ public class ReadingActivity extends Activity implements
 		if (c != null && c.moveToFirst()) {
 			mLocationBase = c.getString(c.getColumnIndex(Books.LOCATION));
 			mBookId = c.getString(c.getColumnIndex(Books.BOOK_ID));
+			mLastOrder = c.getInt(c
+					.getColumnIndex(Books.LAST_READING_POINT_NAVIGATION_ORDER));
+
+			mActivityTitle = mNavigationDrawerTitle = c.getString(c
+					.getColumnIndex(Books.TITLE));
+			setTitle(mActivityTitle);
 		}
 
 		getLoaderManager().initLoader(0, null, this);
