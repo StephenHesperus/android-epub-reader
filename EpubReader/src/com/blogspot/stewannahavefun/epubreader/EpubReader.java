@@ -120,5 +120,6 @@ public class EpubReader {
 			Contents._ID, // 0
 			Contents.NAVIGATION_LABEL, // 1
 			Contents.NAVIGATION_LINK, // 2
+			Contents.NAVIGATION_ORDER, // 3
 	};
 }
