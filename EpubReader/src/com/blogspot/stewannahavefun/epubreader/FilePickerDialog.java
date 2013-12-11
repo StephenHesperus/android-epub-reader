@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -19,6 +20,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class FilePickerDialog extends DialogFragment {
+
+	public interface OnFilePickListener {
+		void onFilePick(Context context, final File file);
+	}
 
 	private static final CharSequence TITLE_OPEN_EPUB_FILE = "Open An Epub File";
 	private static final CharSequence BUTTON_POSITIVE = "Open";
