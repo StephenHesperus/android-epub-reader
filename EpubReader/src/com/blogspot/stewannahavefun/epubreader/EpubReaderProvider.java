@@ -23,7 +23,7 @@ public class EpubReaderProvider extends ContentProvider {
 	private static final String TAG = "EpubReaderProvider";
 
 	private static final String DATABASE_NAME = "epub_reader.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 
 	private static HashMap<String, String> sBooksProjectionMap;
 	private static HashMap<String, String> sContentsProjectionMap;
