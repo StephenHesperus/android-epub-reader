@@ -103,6 +103,7 @@ public class EpubReader {
 	};
 	public static final String[] READ_BOOK_PROJECTION = new String[] {
 			Books._ID,
+			Books.TITLE, // 1
 			Books.LAST_READING_POINT_NAVIGATION_LINK, // 7
 			Books.LAST_READING_POINT_PAGE_NUMBER, // 8
 			Books.LAST_READING_POINT_NAVIGATION_ORDER, // 9
