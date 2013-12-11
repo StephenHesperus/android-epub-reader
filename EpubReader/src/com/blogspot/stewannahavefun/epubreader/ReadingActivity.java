@@ -43,7 +43,7 @@ public class ReadingActivity extends Activity implements
 	private String mNavigationDrawerTitle;
 	private String mActivityTitle;
 
-	private String EPUB_LOCATION;
+	private String mLocationBase;
 	private String mBookId;
 
 	private static final String SCHEME = "file://";
@@ -129,13 +129,18 @@ public class ReadingActivity extends Activity implements
 				navigation,
 				EpubReader.CONTENTS_ITEM_PROJECTION,
 				null, null, null);
-		String link = c.getString(1);
+
+		String link = "";
+		if (c != null && c.moveToFirst()) {
+			link = c.getString(c
+					.getColumnIndex(Contents.NAVIGATION_LINK));
+		}
 
 		mBookView.loadUrl(constructUrl(link));
 	}
 
 	private String constructUrl(String link) {
-		return SCHEME + EPUB_LOCATION + File.separator + link;
+		return SCHEME + mLocationBase + File.separator + link;
 	}
 
 	@Override
