@@ -164,7 +164,8 @@ public class ReadingActivity extends Activity implements
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		String selection = Books.BOOK_ID + " = " + BOOK_ID;
+		String bookId = args.getString(Books.BOOK_ID);
+		String selection = Books.BOOK_ID + " = " + "'" + bookId + "'";
 
 		return new CursorLoader(
 				this,
