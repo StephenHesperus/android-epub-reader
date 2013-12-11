@@ -22,12 +22,14 @@ public class DateTextView extends TextView {
 		super(context, attrs, defStyle);
 	}
 
-	public void setDate(long ms) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.US);
+	public void setDate(long ms, String suffix) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm",
+				Locale.US);
 		Date date = new Date(ms);
 		String dateString = sdf.format(date);
-		
-		setText(dateString);
+		String text = dateString + "  " + suffix;
+
+		setText(text);
 	}
 
 }
