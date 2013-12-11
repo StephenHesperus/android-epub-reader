@@ -18,9 +18,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
-import android.widget.Toast;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 
@@ -28,6 +28,8 @@ public class BookListActivity extends Activity implements
 		LoaderCallbacks<Cursor>, FilePickerDialog.OnFilePickListener {
 
 	private static final String DIALOG_OPEN_EPUB_FILE = "DIALOG_OPEN_EPUB_FILE";
+	protected static final String SUFFIX_ADDED_DATE = "Added";
+	protected static final String SUFFIX_LAST_READING_DATE = "Last Read";
 	private SimpleCursorAdapter mAdapter;
 
 	@Override
@@ -39,6 +41,7 @@ public class BookListActivity extends Activity implements
 				R.id.title,
 				R.id.author,
 				R.id.publisher,
+				R.id.cover,
 				R.id.added_date,
 				R.id.last_reading_date
 		};
@@ -47,7 +50,7 @@ public class BookListActivity extends Activity implements
 				this,
 				R.layout.book_list_item,
 				null,
-				EpubReader.BOOK_LIST_PROJECTION,
+				EpubReader.BOOK_LIST_FROM,
 				to,
 				0);
 
@@ -62,8 +65,17 @@ public class BookListActivity extends Activity implements
 						|| column.equals(Books.LAST_READING_DATE)) {
 					DateTextView dateTextView = (DateTextView) view;
 					long ms = cursor.getLong(columnIndex);
+					String suffix = column.equals(Books.ADDED_DATE)
+							? SUFFIX_ADDED_DATE
+							: SUFFIX_LAST_READING_DATE;
 
-					dateTextView.setDate(ms);
+					dateTextView.setDate(ms, suffix);
+
+					return true;
+				} else if (column.equals(Books.COVER)) {
+					ImageView cover = (ImageView) view;
+
+					cover.setImageResource(R.drawable.ic_epub_cover);
 
 					return true;
 				}
