@@ -128,6 +128,13 @@ public class ReadingActivity extends Activity implements
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+
+		getLoaderManager().restartLoader(0, null, this);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.reading, menu);
