@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 
 import com.blogspot.stewannahavefun.epubreader.EpubFileProcessor.FileIsNotConstructedException;
 import com.blogspot.stewannahavefun.epubreader.EpubFileProcessor.UnsupportedFileException;
@@ -57,6 +58,12 @@ public class ProcessEpubFileService extends IntentService {
 		File epub = new File(data.getPath());
 		File base = new File(mBase);
 		File output = new File(base, epub.getName());
+
+		if (output.isDirectory()) {
+			// TODO: notify the UI the epub file is already in database
+			Log.d("DUPLICATION", "EXISTS");
+			return;
+		}
 
 		output.mkdir();
 
