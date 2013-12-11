@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -33,9 +34,21 @@ public class FilePickerDialog extends DialogFragment {
 	private ArrayAdapter<File> mAdapter;
 	protected ListView mListView;
 	private File mBase;
+	private OnFilePickListener mListener;
 
 	public FilePickerDialog() {
-		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+			mListener = (OnFilePickListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnFilePickListener");
+		}
 	}
 
 	@Override
@@ -80,8 +93,13 @@ public class FilePickerDialog extends DialogFragment {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
+						int pos = mListView.getCheckedItemPosition();
+						final File file = mAdapter.getItem(pos);
 
+						if (file.equals(mBase))
+							return;
+
+						mListener.onFilePick(getActivity(), file);
 					}
 				})
 				.setNegativeButton(BUTTON_NAGATIVE, new OnClickListener() {
