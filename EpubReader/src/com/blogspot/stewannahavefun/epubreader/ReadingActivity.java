@@ -193,6 +193,11 @@ public class ReadingActivity extends Activity implements
 
 	private class NavigationAdapter extends SimpleCursorAdapter {
 
+		private int mDepth;
+		private int mLeft;
+		private int mPadding;
+		private int mPaddingRight;
+
 		public NavigationAdapter(Context context, String[] from, int[] to) {
 			super(context, R.layout.navigation_list_item, null, from, to, 0);
 		}
@@ -203,15 +208,17 @@ public class ReadingActivity extends Activity implements
 					.getColumnIndex(Contents.NAVIGATION_LABEL));
 			int depth = cursor.getInt(cursor
 					.getColumnIndex(Contents.NAVIGATION_DEPTH));
-			TextView navItemView = (TextView) view;
-			int initialPaddingLeft = navItemView.getPaddingLeft();
-			int newPaddingLeft = initialPaddingLeft * depth;
-			int top = navItemView.getPaddingTop();
-			int right = navItemView.getPaddingRight();
-			int bottom = navItemView.getPaddingBottom();
 
+			TextView navItemView = (TextView) view;
+
+			if (cursor.isFirst()) {
+				mDepth = depth;
+			}
+
+			int newPaddingLeft = mLeft * (depth - mDepth + 1) * 2;
 			navItemView.setText(label);
-			navItemView.setPadding(newPaddingLeft, top, right, bottom);
+			navItemView.setPadding(newPaddingLeft,
+					mPadding, mPaddingRight, mPadding);
 		}
 
 		@Override
@@ -220,6 +227,10 @@ public class ReadingActivity extends Activity implements
 			TextView textView = (TextView) inflater.inflate(
 					R.layout.navigation_list_item,
 					null);
+
+			mLeft = textView.getPaddingLeft();
+			mPadding = textView.getPaddingTop();
+			mPaddingRight = textView.getPaddingRight();
 
 			return textView;
 		}
