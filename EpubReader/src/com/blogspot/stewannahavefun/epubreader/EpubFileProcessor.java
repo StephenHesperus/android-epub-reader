@@ -242,7 +242,7 @@ public abstract class EpubFileProcessor {
 			bookInfo.put(Books.LAST_READING_DATE, System.currentTimeMillis());
 
 			bookInfo.put(Books.LAST_READING_POINT_NAVIGATION_LINK, "");
-			bookInfo.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, 0);
+			bookInfo.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, 1);
 			bookInfo.put(Books.LAST_READING_POINT_PAGE_NUMBER, 0);
 
 			bookInfo.put(Books.BOOK_ID, bookId);
