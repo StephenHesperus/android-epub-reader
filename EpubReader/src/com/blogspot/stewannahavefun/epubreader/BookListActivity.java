@@ -132,6 +132,19 @@ public class BookListActivity extends Activity implements
 		super.onResume();
 
 		getLoaderManager().restartLoader(0, null, this);
+
+		IntentFilter filter = new IntentFilter();
+		mReceiver = new ProcessorReceiver();
+
+		filter.addAction(ACTION_DUPLICATION);
+		registerReceiver(mReceiver, filter);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		unregisterReceiver(mReceiver);
 	}
 
 	@Override
@@ -182,5 +195,4 @@ public class BookListActivity extends Activity implements
 		process.setData(Uri.fromFile(file));
 		context.startService(process);
 	}
-
 }
