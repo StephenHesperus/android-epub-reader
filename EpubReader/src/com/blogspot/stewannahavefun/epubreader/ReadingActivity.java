@@ -51,6 +51,7 @@ public class ReadingActivity extends Activity implements
 	private long m_Id;
 
 	private static final String SCHEME = "file://";
+	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -188,7 +189,14 @@ public class ReadingActivity extends Activity implements
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+
 		switch (item.getItemId()) {
+		case R.id.action_edit_theme:
+			ThemeEditorDialog dialog = new ThemeEditorDialog();
+
+			dialog.show(getFragmentManager(), THEME_EDITOR_DIALOG);
+
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
