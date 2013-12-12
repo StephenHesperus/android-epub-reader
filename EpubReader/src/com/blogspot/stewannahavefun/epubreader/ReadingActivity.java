@@ -5,6 +5,7 @@ import java.io.File;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -45,6 +47,8 @@ public class ReadingActivity extends Activity implements
 
 	private String mLocationBase;
 	private String mBookId;
+	private int mLastOrder;
+	private long m_Id;
 
 	private static final String SCHEME = "file://";
 
@@ -91,6 +95,7 @@ public class ReadingActivity extends Activity implements
 
 		mAdapter = new NavigationAdapter(this, from, to);
 		mNavigationList.setAdapter(mAdapter);
+		mNavigationList.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		mNavigationList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -108,6 +113,7 @@ public class ReadingActivity extends Activity implements
 	}
 
 	private void prepareReadingSession(long id) {
+		m_Id = id;
 		Uri current = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, id);
 		Cursor c = getContentResolver().query(
 				current,
@@ -117,6 +123,11 @@ public class ReadingActivity extends Activity implements
 		if (c != null && c.moveToFirst()) {
 			mLocationBase = c.getString(c.getColumnIndex(Books.LOCATION));
 			mBookId = c.getString(c.getColumnIndex(Books.BOOK_ID));
+			mLastOrder = c.getInt(c
+					.getColumnIndex(Books.LAST_READING_POINT_NAVIGATION_ORDER));
+
+			mNavigationDrawerTitle = c.getString(c.getColumnIndex(Books.TITLE));
+			setTitle(mActivityTitle);
 		}
 
 		getLoaderManager().initLoader(0, null, this);
@@ -130,13 +141,18 @@ public class ReadingActivity extends Activity implements
 				EpubReader.CONTENTS_ITEM_PROJECTION,
 				null, null, null);
 
-		String link = "";
 		if (c != null && c.moveToFirst()) {
-			link = c.getString(c
+			String link = c.getString(c
 					.getColumnIndex(Contents.NAVIGATION_LINK));
-		}
+			String label = c.getString(c
+					.getColumnIndex(Contents.NAVIGATION_LABEL));
 
-		mBookView.loadUrl(constructUrl(link));
+			mActivityTitle = label;
+			mBookView.loadUrl(constructUrl(link));
+
+			mLastOrder = c.getInt(c
+					.getColumnIndex(Contents.NAVIGATION_ORDER));
+		}
 	}
 
 	private String constructUrl(String link) {
@@ -148,6 +164,16 @@ public class ReadingActivity extends Activity implements
 		super.onResume();
 
 		getLoaderManager().restartLoader(0, null, this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		ContentValues v = new ContentValues();
+		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
+		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
+		getContentResolver().update(lastRead, v, null, null);
 	}
 
 	@Override
@@ -199,6 +225,11 @@ public class ReadingActivity extends Activity implements
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
 		mAdapter.swapCursor(c);
+
+		mNavigationList.setItemChecked(mLastOrder - 1, true);
+		onNavigationLabelClick(mNavigationList
+				.getItemIdAtPosition(mLastOrder - 1));
+		setTitle(mActivityTitle);
 	}
 
 	@Override

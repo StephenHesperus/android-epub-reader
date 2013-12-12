@@ -103,6 +103,7 @@ public class EpubReader {
 	};
 	public static final String[] READ_BOOK_PROJECTION = new String[] {
 			Books._ID,
+			Books.TITLE, // 1
 			Books.LAST_READING_POINT_NAVIGATION_LINK, // 7
 			Books.LAST_READING_POINT_PAGE_NUMBER, // 8
 			Books.LAST_READING_POINT_NAVIGATION_ORDER, // 9
@@ -112,12 +113,13 @@ public class EpubReader {
 	public static final String[] CONTENTS_PROJECTION = new String[] {
 			Contents._ID, // 0
 			Contents.NAVIGATION_LABEL, // 1
-			Contents.NAVIGATION_ORDER, // 3
 			Contents.NAVIGATION_DEPTH, // 4
 			Contents.BOOK_ID // 5
 	};
 	public static final String[] CONTENTS_ITEM_PROJECTION = new String[] {
 			Contents._ID, // 0
+			Contents.NAVIGATION_LABEL, // 1
 			Contents.NAVIGATION_LINK, // 2
+			Contents.NAVIGATION_ORDER, // 3
 	};
 }
