@@ -126,8 +126,7 @@ public class ReadingActivity extends Activity implements
 			mLastOrder = c.getInt(c
 					.getColumnIndex(Books.LAST_READING_POINT_NAVIGATION_ORDER));
 
-			mActivityTitle = mNavigationDrawerTitle = c.getString(c
-					.getColumnIndex(Books.TITLE));
+			mNavigationDrawerTitle = c.getString(c.getColumnIndex(Books.TITLE));
 			setTitle(mActivityTitle);
 		}
 
@@ -230,6 +229,7 @@ public class ReadingActivity extends Activity implements
 		mNavigationList.setItemChecked(mLastOrder - 1, true);
 		onNavigationLabelClick(mNavigationList
 				.getItemIdAtPosition(mLastOrder - 1));
+		setTitle(mActivityTitle);
 	}
 
 	@Override
