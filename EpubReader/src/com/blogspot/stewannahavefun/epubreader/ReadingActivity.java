@@ -5,6 +5,7 @@ import java.io.File;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -47,6 +48,7 @@ public class ReadingActivity extends Activity implements
 	private String mLocationBase;
 	private String mBookId;
 	private int mLastOrder;
+	private long m_Id;
 
 	private static final String SCHEME = "file://";
 
@@ -111,6 +113,7 @@ public class ReadingActivity extends Activity implements
 	}
 
 	private void prepareReadingSession(long id) {
+		m_Id = id;
 		Uri current = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, id);
 		Cursor c = getContentResolver().query(
 				current,
@@ -162,6 +165,16 @@ public class ReadingActivity extends Activity implements
 		super.onResume();
 
 		getLoaderManager().restartLoader(0, null, this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		ContentValues v = new ContentValues();
+		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
+		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
+		getContentResolver().update(lastRead, v, null, null);
 	}
 
 	@Override
