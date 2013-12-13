@@ -57,8 +57,8 @@ public class ThemeEditorDialog extends DialogFragment {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						mRawCSS = editor.getText().toString()
-								.replaceAll("\n", "");
+						mRawCSS = ReadingTheme.DEFAULT_CSS.concat(editor
+								.getText().toString());
 						mListener.onThemeChange(mRawCSS);
 					}
 				})
@@ -70,7 +70,7 @@ public class ThemeEditorDialog extends DialogFragment {
 									int which) {
 								dialog.dismiss();
 							}
-				})
+						})
 				.setCancelable(true);
 
 		return builder.create();
