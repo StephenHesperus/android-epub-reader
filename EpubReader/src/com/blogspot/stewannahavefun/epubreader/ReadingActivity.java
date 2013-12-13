@@ -122,6 +122,19 @@ public class ReadingActivity extends Activity implements
 
 		enableJavaScript(webSettings);
 
+		WebViewClient webViewClient = new WebViewClient() {
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				super.onPageFinished(view, url);
+
+				applyTheme();
+			}
+
+		};
+
+		mBookView.setWebViewClient(webViewClient);
+
 		Intent start = getIntent();
 
 		if (start.hasExtra(Books._ID)) {
