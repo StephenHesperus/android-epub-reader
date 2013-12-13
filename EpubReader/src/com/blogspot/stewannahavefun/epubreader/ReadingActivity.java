@@ -53,6 +53,7 @@ public class ReadingActivity extends Activity implements
 	private int mLastOrder;
 	private long m_Id;
 	private String mCSS;
+	private RelativeLayout mNavigationDrawer;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -69,6 +70,7 @@ public class ReadingActivity extends Activity implements
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.reading_drawer_layout);
 		mNavigationList = (ListView) findViewById(R.id.navigation_list);
 		mBookView = (WebView) findViewById(R.id.book_view);
+		mNavigationDrawer = (RelativeLayout) findViewById(R.id.navigation_drawer);
 
 		mDrawerToggle = new ActionBarDrawerToggle(
 				this,
@@ -191,6 +193,16 @@ public class ReadingActivity extends Activity implements
 		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
 		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
 		getContentResolver().update(lastRead, v, null, null);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mNavigationDrawer);
+
+		for (int i = 0; i < menu.size(); i++)
+			menu.getItem(i).setVisible(!drawerOpen);
+
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
