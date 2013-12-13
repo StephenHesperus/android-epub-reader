@@ -2,6 +2,7 @@ package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
@@ -10,10 +11,12 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,19 +25,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
+import com.blogspot.stewannahavefun.epubreader.ThemeEditorDialog.ThemeEditorListener;
 
 public class ReadingActivity extends Activity implements
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, ThemeEditorListener {
 	private DrawerLayout mDrawerLayout;
 	private ListView mNavigationList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -49,8 +56,14 @@ public class ReadingActivity extends Activity implements
 	private String mBookId;
 	private int mLastOrder;
 	private long m_Id;
+	private String mCSS;
+	private RelativeLayout mNavigationDrawer;
+	private SharedPreferences mPref;
 
 	private static final String SCHEME = "file://";
+	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
+	private static final String ARG_CSS = "ARG_CSS";
+	private static final String KEY_CSS = "KEY_CSS";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +76,7 @@ public class ReadingActivity extends Activity implements
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.reading_drawer_layout);
 		mNavigationList = (ListView) findViewById(R.id.navigation_list);
 		mBookView = (WebView) findViewById(R.id.book_view);
+		mNavigationDrawer = (RelativeLayout) findViewById(R.id.navigation_drawer);
 
 		mDrawerToggle = new ActionBarDrawerToggle(
 				this,
@@ -105,11 +119,37 @@ public class ReadingActivity extends Activity implements
 			}
 		});
 
+		// WebView setup
+		mPref = PreferenceManager.getDefaultSharedPreferences(this);
+		mCSS = mPref.getString(KEY_CSS, ReadingTheme.DEFAULT_CSS);
+
+		WebSettings webSettings = mBookView.getSettings();
+
+		enableJavaScript(webSettings);
+
+		WebViewClient webViewClient = new WebViewClient() {
+
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				super.onPageFinished(view, url);
+
+				applyTheme();
+			}
+
+		};
+
+		mBookView.setWebViewClient(webViewClient);
+
 		Intent start = getIntent();
 
 		if (start.hasExtra(Books._ID)) {
 			prepareReadingSession(start.getLongExtra(Books._ID, 1));
 		}
+	}
+
+	@SuppressLint("SetJavaScriptEnabled")
+	private void enableJavaScript(WebSettings webSettings) {
+		webSettings.setJavaScriptEnabled(true);
 	}
 
 	private void prepareReadingSession(long id) {
@@ -148,14 +188,14 @@ public class ReadingActivity extends Activity implements
 					.getColumnIndex(Contents.NAVIGATION_LABEL));
 
 			mActivityTitle = label;
-			mBookView.loadUrl(constructUrl(link));
+			mBookView.loadUrl(constructPageUrl(link));
 
 			mLastOrder = c.getInt(c
 					.getColumnIndex(Contents.NAVIGATION_ORDER));
 		}
 	}
 
-	private String constructUrl(String link) {
+	private String constructPageUrl(String link) {
 		return SCHEME + mLocationBase + File.separator + link;
 	}
 
@@ -174,6 +214,21 @@ public class ReadingActivity extends Activity implements
 		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
 		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
 		getContentResolver().update(lastRead, v, null, null);
+
+		SharedPreferences.Editor editor = mPref.edit();
+
+		editor.putString(KEY_CSS, mCSS);
+		editor.apply();
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mNavigationDrawer);
+
+		for (int i = 0; i < menu.size(); i++)
+			menu.getItem(i).setVisible(!drawerOpen);
+
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -188,7 +243,17 @@ public class ReadingActivity extends Activity implements
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+
 		switch (item.getItemId()) {
+		case R.id.action_edit_theme:
+			ThemeEditorDialog dialog = new ThemeEditorDialog();
+			Bundle args = new Bundle();
+			args.putString(ARG_CSS, mCSS);
+
+			dialog.setArguments(args);
+			dialog.show(getFragmentManager(), THEME_EDITOR_DIALOG);
+
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -282,4 +347,19 @@ public class ReadingActivity extends Activity implements
 		}
 
 	}
+
+	@Override
+	public void onThemeChange(String rawCSS) {
+		mCSS = rawCSS;
+
+		applyTheme();
+	}
+
+	private void applyTheme() {
+		String css = mCSS.replaceAll("\n", "");
+		String js = ReadingTheme.constructThemeUrl(css);
+
+		mBookView.loadUrl(js);
+	}
+
 }
