@@ -21,6 +21,8 @@ public class ThemeEditorDialog extends DialogFragment {
 
 	private static final CharSequence CANCEL = "Cancel";
 
+	private static final String ARG_CSS = "ARG_CSS";
+
 	private ThemeEditorListener mListener;
 
 	protected String mThemeCSS;
@@ -43,6 +45,9 @@ public class ThemeEditorDialog extends DialogFragment {
 		LayoutInflater inflater = LayoutInflater.from(getActivity());
 		final EditText editor = (EditText) inflater.inflate(
 				R.layout.dialog_theme_editor, null);
+		String css = getArguments().getString(ARG_CSS);
+
+		editor.setText(css);
 
 		builder.setTitle(THEME_EDITOR_DIALOG_TITLE)
 				.setView(editor)
