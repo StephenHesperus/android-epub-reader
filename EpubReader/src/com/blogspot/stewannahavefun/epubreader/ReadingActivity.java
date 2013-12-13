@@ -193,7 +193,10 @@ public class ReadingActivity extends Activity implements
 		switch (item.getItemId()) {
 		case R.id.action_edit_theme:
 			ThemeEditorDialog dialog = new ThemeEditorDialog();
+			Bundle args = new Bundle();
+			args.putString(ARG_CSS, mCSS);
 
+			dialog.setArguments(args);
 			dialog.show(getFragmentManager(), THEME_EDITOR_DIALOG);
 
 			return true;
