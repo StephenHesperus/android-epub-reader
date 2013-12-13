@@ -214,6 +214,11 @@ public class ReadingActivity extends Activity implements
 		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
 		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
 		getContentResolver().update(lastRead, v, null, null);
+
+		SharedPreferences.Editor editor = mPref.edit();
+
+		editor.putString(KEY_CSS, mCSS);
+		editor.apply();
 	}
 
 	@Override
