@@ -28,4 +28,7 @@
 	<!-- booklist menu -->
 	<string name="action_open">Open</string>
 
+	<!-- reading menu -->
+	<string name="action_edit_theme">Edit Theme</string>
+
 </resources>
