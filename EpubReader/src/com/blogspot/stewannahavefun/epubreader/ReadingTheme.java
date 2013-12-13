@@ -25,7 +25,7 @@ public class ReadingTheme {
 				+ "style.setAttribute('type', 'text/css');"
 				+ "document.head.appendChild(style);"
 				+ "}"
-				+ "style.textContent = \"" + css + "\";";
+				+ "style.textContent = \"" + DEFAULT_CSS + css + "\";";
 
 		return js;
 	}
