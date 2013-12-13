@@ -356,7 +356,9 @@ public class ReadingActivity extends Activity implements
 	}
 
 	private void applyTheme() {
-		String js = ReadingTheme.constructThemeUrl(mCSS);
+		String css = mCSS.replaceAll("\n", "");
+		String js = ReadingTheme.constructThemeUrl(css);
+
 		mBookView.loadUrl(js);
 	}
 
