@@ -156,7 +156,7 @@ public class ReadingActivity extends Activity implements
 		}
 	}
 
-	private String constructUrl(String link) {
+	private String constructPageUrl(String link) {
 		return SCHEME + mLocationBase + File.separator + link;
 	}
 
