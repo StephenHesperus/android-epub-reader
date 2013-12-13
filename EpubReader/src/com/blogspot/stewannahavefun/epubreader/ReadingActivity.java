@@ -149,7 +149,7 @@ public class ReadingActivity extends Activity implements
 					.getColumnIndex(Contents.NAVIGATION_LABEL));
 
 			mActivityTitle = label;
-			mBookView.loadUrl(constructUrl(link));
+			mBookView.loadUrl(constructPageUrl(link));
 
 			mLastOrder = c.getInt(c
 					.getColumnIndex(Contents.NAVIGATION_ORDER));
