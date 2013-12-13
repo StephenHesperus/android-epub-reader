@@ -3,6 +3,7 @@ package com.blogspot.stewannahavefun.epubreader;
 public class ReadingTheme {
 
 	private static final String STYLE_ID = "-style-injected-by-epubreader";
+	public static final String DEFAULT_CSS = "body { padding: 16px; }";
 
 	public ReadingTheme() {
 	}
