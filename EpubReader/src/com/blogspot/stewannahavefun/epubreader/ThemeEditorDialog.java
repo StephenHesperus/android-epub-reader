@@ -45,9 +45,11 @@ public class ThemeEditorDialog extends DialogFragment {
 		LayoutInflater inflater = LayoutInflater.from(getActivity());
 		final EditText editor = (EditText) inflater.inflate(
 				R.layout.dialog_theme_editor, null);
-		String css = getArguments().getString(ARG_CSS);
+		String argCSS = getArguments().getString(ARG_CSS);
 
-		editor.setText(css);
+		mRawCSS = argCSS.substring(ReadingTheme.DEFAULT_CSS.length());
+
+		editor.setText(mRawCSS);
 
 		builder.setTitle(THEME_EDITOR_DIALOG_TITLE)
 				.setView(editor)
