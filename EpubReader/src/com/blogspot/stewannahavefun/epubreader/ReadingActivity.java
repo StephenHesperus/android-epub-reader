@@ -2,6 +2,7 @@ package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
@@ -22,7 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -106,11 +109,22 @@ public class ReadingActivity extends Activity implements
 			}
 		});
 
+		// WebView setup
+		mCSS = "";
+		WebSettings webSettings = mBookView.getSettings();
+
+		enableJavaScript(webSettings);
+
 		Intent start = getIntent();
 
 		if (start.hasExtra(Books._ID)) {
 			prepareReadingSession(start.getLongExtra(Books._ID, 1));
 		}
+	}
+
+	@SuppressLint("SetJavaScriptEnabled")
+	private void enableJavaScript(WebSettings webSettings) {
+		webSettings.setJavaScriptEnabled(true);
 	}
 
 	private void prepareReadingSession(long id) {
