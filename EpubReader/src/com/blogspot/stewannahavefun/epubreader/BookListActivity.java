@@ -49,6 +49,7 @@ public class BookListActivity extends Activity implements
 	protected static final String SUFFIX_LAST_READING_DATE = "Last Read";
 	private static final String ACTION_DUPLICATION = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION";
 	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
+	private static final String ACTION_UNSUPPORTED_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 
@@ -137,6 +138,7 @@ public class BookListActivity extends Activity implements
 		mReceiver = new ProcessorReceiver();
 
 		filter.addAction(ACTION_DUPLICATION);
+		filter.addAction(ACTION_UNSUPPORTED_FILE);
 		registerReceiver(mReceiver, filter);
 	}
 
