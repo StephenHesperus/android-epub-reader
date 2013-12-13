@@ -29,15 +29,18 @@ import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
+import com.blogspot.stewannahavefun.epubreader.ThemeEditorDialog.ThemeEditorListener;
 
 public class ReadingActivity extends Activity implements
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, ThemeEditorListener {
 	private DrawerLayout mDrawerLayout;
 	private ListView mNavigationList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -321,4 +324,12 @@ public class ReadingActivity extends Activity implements
 		}
 
 	}
+
+	@Override
+	public void onThemeChange(String css) {
+		mCSS = css;
+
+		applyTheme();
+	}
+
 }
