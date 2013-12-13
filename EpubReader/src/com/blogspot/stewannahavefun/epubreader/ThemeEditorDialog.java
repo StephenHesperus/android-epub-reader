@@ -25,7 +25,7 @@ public class ThemeEditorDialog extends DialogFragment {
 
 	private ThemeEditorListener mListener;
 
-	protected String mThemeCSS;
+	protected String mRawCSS;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -55,9 +55,9 @@ public class ThemeEditorDialog extends DialogFragment {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						mThemeCSS = editor.getText().toString()
+						mRawCSS = editor.getText().toString()
 								.replaceAll("\n", "");
-						mListener.onThemeChange(mThemeCSS);
+						mListener.onThemeChange(mRawCSS);
 					}
 				})
 				.setNegativeButton(CANCEL,
