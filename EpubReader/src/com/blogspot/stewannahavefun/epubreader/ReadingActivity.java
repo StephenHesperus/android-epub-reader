@@ -332,4 +332,9 @@ public class ReadingActivity extends Activity implements
 		applyTheme();
 	}
 
+	private void applyTheme() {
+		String js = ReadingTheme.constructThemeUrl(mCSS);
+		mBookView.loadUrl(js);
+	}
+
 }
