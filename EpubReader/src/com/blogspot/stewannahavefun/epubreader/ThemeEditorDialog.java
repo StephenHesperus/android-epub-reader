@@ -55,7 +55,8 @@ public class ThemeEditorDialog extends DialogFragment {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						mThemeCSS = editor.getText().toString();
+						mThemeCSS = editor.getText().toString()
+								.replaceAll("\n", "");
 						mListener.onThemeChange(mThemeCSS);
 					}
 				})
