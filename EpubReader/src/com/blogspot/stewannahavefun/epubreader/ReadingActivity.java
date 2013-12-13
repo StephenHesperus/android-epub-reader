@@ -349,8 +349,8 @@ public class ReadingActivity extends Activity implements
 	}
 
 	@Override
-	public void onThemeChange(String css) {
-		mCSS = css;
+	public void onThemeChange(String rawCSS) {
+		mCSS = rawCSS;
 
 		applyTheme();
 	}
