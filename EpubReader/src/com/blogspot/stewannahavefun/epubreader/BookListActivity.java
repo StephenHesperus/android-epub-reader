@@ -39,6 +39,12 @@ public class BookListActivity extends Activity implements
 				String msg = filename + " already exists!";
 
 				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+			} else if (ACTION_UNSUPPORTED_FILE.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_UNSUPPORTED_FILE_EXTRA);
+				String msg = filename + " is not a valid epub file!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -49,6 +55,8 @@ public class BookListActivity extends Activity implements
 	protected static final String SUFFIX_LAST_READING_DATE = "Last Read";
 	private static final String ACTION_DUPLICATION = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION";
 	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
+	private static final String ACTION_UNSUPPORTED_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE";
+	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 
@@ -137,6 +145,7 @@ public class BookListActivity extends Activity implements
 		mReceiver = new ProcessorReceiver();
 
 		filter.addAction(ACTION_DUPLICATION);
+		filter.addAction(ACTION_UNSUPPORTED_FILE);
 		registerReceiver(mReceiver, filter);
 	}
 

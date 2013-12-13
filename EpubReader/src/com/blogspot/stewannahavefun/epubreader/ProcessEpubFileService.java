@@ -35,6 +35,8 @@ public class ProcessEpubFileService extends IntentService {
 	private static final String NCX_PATH = "NCX_PATH";
 	private static final String ACTION_DUPLICATION = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION";
 	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
+	private static final String ACTION_UNSUPPORTED_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE";
+	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
 	private final String mBase = Environment.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
 	private String mBookId;
@@ -88,7 +90,10 @@ public class ProcessEpubFileService extends IntentService {
 				processor.readNcxFile();
 			}
 		} catch (UnsupportedFileException e) {
-			e.printStackTrace();
+			Intent unsupported = new Intent(ACTION_UNSUPPORTED_FILE);
+
+			unsupported.putExtra(ACTION_UNSUPPORTED_FILE_EXTRA, epub.getName());
+			sendBroadcast(unsupported);
 		} catch (FileIsNotConstructedException e) {
 			e.printStackTrace();
 		}
