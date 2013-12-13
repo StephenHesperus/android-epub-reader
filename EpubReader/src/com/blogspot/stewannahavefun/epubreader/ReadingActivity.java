@@ -11,10 +11,12 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,7 +31,6 @@ import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
@@ -57,10 +58,12 @@ public class ReadingActivity extends Activity implements
 	private long m_Id;
 	private String mCSS;
 	private RelativeLayout mNavigationDrawer;
+	private SharedPreferences mPref;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
 	private static final String ARG_CSS = "ARG_CSS";
+	private static final String KEY_CSS = "KEY_CSS";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +120,9 @@ public class ReadingActivity extends Activity implements
 		});
 
 		// WebView setup
-		mCSS = "";
+		mPref = PreferenceManager.getDefaultSharedPreferences(this);
+		mCSS = mPref.getString(KEY_CSS, ReadingTheme.DEFAULT_CSS);
+
 		WebSettings webSettings = mBookView.getSettings();
 
 		enableJavaScript(webSettings);
