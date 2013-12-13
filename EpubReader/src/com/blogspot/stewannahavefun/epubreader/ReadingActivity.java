@@ -52,9 +52,11 @@ public class ReadingActivity extends Activity implements
 	private String mBookId;
 	private int mLastOrder;
 	private long m_Id;
+	private String mCSS;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
+	private static final String ARG_CSS = "ARG_CSS";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
