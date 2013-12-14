@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<PreferenceCategory android:title="@string/pref_title_category_about" >
+		<Preference
+			android:summary="@string/pref_summary_author"
+			android:title="@string/pref_title_author" />
+		<Preference
+			android:summary="@string/pref_summary_licenses"
+			android:title="@string/pref_title_licenses" />
+		<Preference
+			android:summary="@string/pref_summary_version"
+			android:title="@string/pref_title_version" />
+	</PreferenceCategory>
+
+</PreferenceScreen>
