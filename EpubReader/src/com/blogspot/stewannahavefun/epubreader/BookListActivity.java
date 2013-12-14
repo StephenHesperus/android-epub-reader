@@ -172,6 +172,13 @@ public class BookListActivity extends Activity implements
 
 			return true;
 
+		case R.id.action_about:
+			Intent about = new Intent(this, AboutActivity.class);
+
+			startActivity(about);
+
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
