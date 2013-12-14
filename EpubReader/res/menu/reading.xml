@@ -4,7 +4,7 @@
 		android:id="@+id/action_edit_theme"
 		android:icon="@drawable/ic_action_edit_theme"
 		android:orderInCategory="50"
-		android:showAsAction="always"
+		android:showAsAction="ifRoom"
 		android:title="@string/action_edit_theme"/>
 	<item
 		android:id="@+id/action_about"

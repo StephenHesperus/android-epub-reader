@@ -56,7 +56,7 @@ public abstract class EpubFileProcessor {
 	private static final String AUTHOR = "creator";
 	private static final String DC_NS = "http://purl.org/dc/elements/1.1/";
 	private static final String PUBLISHER = "publisher";
-	private static final String COVER = "cover";
+	// private static final String COVER = "cover";
 	private static final String NCX_PATH = "NCX_PATH";
 
 	public EpubFileProcessor(File epub, File output) {
@@ -219,7 +219,7 @@ public abstract class EpubFileProcessor {
 					.getTextContent();
 			String publisher = doc.getElementsByTagNameNS(DC_NS, PUBLISHER)
 					.item(0).getTextContent();
-			String cover = doc.getElementById(COVER).getAttribute(HREF);
+			// String cover = doc.getElementById(COVER).getAttribute(HREF);
 			String bookId = doc.getElementsByTagNameNS(DC_NS, ID).item(0)
 					.getTextContent();
 
@@ -236,7 +236,7 @@ public abstract class EpubFileProcessor {
 			bookInfo.put(Books.TITLE, title);
 			bookInfo.put(Books.AUTHOR, author);
 			bookInfo.put(Books.PUBLISHER, publisher);
-			bookInfo.put(Books.COVER, cover);
+			// bookInfo.put(Books.COVER, cover);
 
 			bookInfo.put(Books.ADDED_DATE, System.currentTimeMillis());
 			bookInfo.put(Books.LAST_READING_DATE, System.currentTimeMillis());
