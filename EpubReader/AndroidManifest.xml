@@ -30,6 +30,10 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="com.blogspot.stewannahavefun.epubreader.BookListActivity" />
 		</activity>
+		<activity
+			android:name="com.blogspot.stewannahavefun.epubreader.AboutActivity"
+			android:label="@string/title_activity_about" >
+		</activity>
 
 		<service
 			android:name="com.blogspot.stewannahavefun.epubreader.ScanDirectoryService"
