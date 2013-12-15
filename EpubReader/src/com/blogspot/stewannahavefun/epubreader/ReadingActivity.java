@@ -59,6 +59,9 @@ public class ReadingActivity extends Activity implements
 	private String mCSS;
 	private RelativeLayout mNavigationDrawer;
 	private SharedPreferences mPref;
+	private String mLastLink;
+	private int mLastPosition;
+	protected boolean mRestore;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -165,9 +168,15 @@ public class ReadingActivity extends Activity implements
 			mBookId = c.getString(c.getColumnIndex(Books.BOOK_ID));
 			mLastOrder = c.getInt(c
 					.getColumnIndex(Books.LAST_READING_POINT_NAVIGATION_ORDER));
+			mLastLink = c.getString(c
+					.getColumnIndex(Books.LAST_READING_POINT_NAVIGATION_LINK));
+			mLastPosition = c.getInt(c
+					.getColumnIndex(Books.LAST_READING_POINT_PAGE_NUMBER));
 
 			mNavigationDrawerTitle = c.getString(c.getColumnIndex(Books.TITLE));
 			setTitle(mActivityTitle);
+
+			mRestore = true;
 		}
 
 		getLoaderManager().initLoader(0, null, this);
