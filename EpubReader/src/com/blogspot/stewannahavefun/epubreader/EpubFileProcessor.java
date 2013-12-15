@@ -227,17 +227,21 @@ public abstract class EpubFileProcessor {
 			}
 
 			// metadata
+			// must have at least one, process the first one
 			String title = doc.getElementsByTagNameNS(DC_NS, TITLE).item(0)
 					.getTextContent();
+			// optional
 			String author = doc.getElementsByTagNameNS(DC_NS, AUTHOR).item(0)
 					.getTextContent();
+			// optional
 			String publisher = doc.getElementsByTagNameNS(DC_NS, PUBLISHER)
 					.item(0).getTextContent();
-			// String cover = doc.getElementById(COVER).getAttribute(HREF);
+			// must have at least one, process the first one
 			String bookId = doc.getElementsByTagNameNS(DC_NS, ID).item(0)
 					.getTextContent();
 
 			// .ncx file
+			// must have one
 			Element spine = (Element) doc.getElementsByTagName(SPINE).item(0);
 			String ncxId = spine.getAttribute(TOC);
 			Element ncx = doc.getElementById(ncxId);
