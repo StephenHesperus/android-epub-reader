@@ -16,6 +16,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -59,6 +60,9 @@ public class ReadingActivity extends Activity implements
 	private String mCSS;
 	private RelativeLayout mNavigationDrawer;
 	private SharedPreferences mPref;
+	private String mLastLink;
+	private int mLastPosition;
+	private final Handler mHandler = new Handler();
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -134,6 +138,8 @@ public class ReadingActivity extends Activity implements
 				super.onPageFinished(view, url);
 
 				applyTheme();
+
+				mLastLink = url;
 			}
 
 		};
@@ -165,9 +171,29 @@ public class ReadingActivity extends Activity implements
 			mBookId = c.getString(c.getColumnIndex(Books.BOOK_ID));
 			mLastOrder = c.getInt(c
 					.getColumnIndex(Books.LAST_READING_POINT_NAVIGATION_ORDER));
+			mLastLink = c.getString(c
+					.getColumnIndex(Books.LAST_READING_POINT_NAVIGATION_LINK));
+			mLastPosition = c.getInt(c
+					.getColumnIndex(Books.LAST_READING_POINT_PAGE_NUMBER));
 
 			mNavigationDrawerTitle = c.getString(c.getColumnIndex(Books.TITLE));
-			setTitle(mActivityTitle);
+			setTitle(mNavigationDrawerTitle);
+
+			mBookView.loadUrl(mLastLink);
+
+			mHandler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					if (mBookView.getContentHeight() > 0) {
+						mBookView.scrollTo(0, mLastPosition);
+
+						mHandler.removeCallbacks(this);
+					} else {
+						mHandler.postDelayed(this, 100);
+					}
+				}
+			}, 100);
 		}
 
 		getLoaderManager().initLoader(0, null, this);
@@ -212,7 +238,13 @@ public class ReadingActivity extends Activity implements
 
 		ContentValues v = new ContentValues();
 		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
+		int offsetY = mBookView.getScrollY();
+
 		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
+		v.put(Books.LAST_READING_POINT_NAVIGATION_LINK, mLastLink);
+		v.put(Books.LAST_READING_DATE, System.currentTimeMillis());
+		v.put(Books.LAST_READING_POINT_PAGE_NUMBER, offsetY);
+
 		getContentResolver().update(lastRead, v, null, null);
 
 		SharedPreferences.Editor editor = mPref.edit();
@@ -299,9 +331,11 @@ public class ReadingActivity extends Activity implements
 		mAdapter.swapCursor(c);
 
 		mNavigationList.setItemChecked(mLastOrder - 1, true);
-		onNavigationLabelClick(mNavigationList
-				.getItemIdAtPosition(mLastOrder - 1));
-		setTitle(mActivityTitle);
+
+		if (mLastLink.isEmpty()) {
+			onNavigationLabelClick(mNavigationList
+					.getItemIdAtPosition(mLastOrder - 1));
+		}
 	}
 
 	@Override
