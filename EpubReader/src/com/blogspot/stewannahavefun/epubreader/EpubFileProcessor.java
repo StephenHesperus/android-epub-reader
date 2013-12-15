@@ -78,6 +78,8 @@ public abstract class EpubFileProcessor {
 
 			if (ze == null) {
 				zis.close();
+				is.close();
+
 				throw new UnsupportedFileException("Invalid file "
 						+ mEpub.getName());
 			}
@@ -104,19 +106,30 @@ public abstract class EpubFileProcessor {
 					}
 				}
 
-				File file = new File(mOutput + File.separator + filename);
+				File file = new File(mOutput, filename);
 
-				(new File(file.getParent())).mkdirs();
+				if (!file.exists()) {
+					if (ze.isDirectory()) {
+						file.mkdir();
+					} else {
 
-				FileOutputStream fos = new FileOutputStream(file);
+						FileOutputStream fos = null;
+						try {
+							fos = new FileOutputStream(file);
 
-				fos.write(bytes);
-				fos.flush();
-				fos.close();
+							fos.write(bytes);
+						} finally {
+							if (fos != null)
+								fos.close();
+						}
+					}
+				}
+
 				baos.close();
 			} while ((ze = zis.getNextEntry()) != null && mimetypeCorrect);
 
 			zis.close();
+			is.close();
 			unzipSuccess = true;
 		} catch (UnsupportedFileException e) {
 			File[] nonSence = mOutput.listFiles();
