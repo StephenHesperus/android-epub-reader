@@ -331,6 +331,11 @@ public class ReadingActivity extends Activity implements
 		mAdapter.swapCursor(c);
 
 		mNavigationList.setItemChecked(mLastOrder - 1, true);
+
+		if (mLastLink.isEmpty()) {
+			onNavigationLabelClick(mNavigationList
+					.getItemIdAtPosition(mLastOrder - 1));
+		}
 	}
 
 	@Override
