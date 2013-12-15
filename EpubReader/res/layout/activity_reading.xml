@@ -10,10 +10,12 @@
 		android:layout_height="match_parent"
 		android:padding="0dp" >
 
-		<WebView
-			android:id="@+id/book_view"
+		<ViewStub
+			android:id="@+id/view_stub"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent" />
+			android:layout_height="match_parent"
+			android:inflatedId="@+id/reading_stub"
+			android:layout="@layout/fragment_reading" />
 	</FrameLayout>
 
 	<RelativeLayout
