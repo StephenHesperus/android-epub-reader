@@ -178,7 +178,7 @@ public class ReadingActivity extends Activity implements
 					.getColumnIndex(Books.LAST_READING_POINT_PAGE_NUMBER));
 
 			mNavigationDrawerTitle = c.getString(c.getColumnIndex(Books.TITLE));
-			setTitle(mActivityTitle);
+			setTitle(mNavigationDrawerTitle);
 
 			mRestore = true;
 			mBookView.loadUrl(mLastLink);
@@ -332,9 +332,6 @@ public class ReadingActivity extends Activity implements
 		mAdapter.swapCursor(c);
 
 		mNavigationList.setItemChecked(mLastOrder - 1, true);
-		onNavigationLabelClick(mNavigationList
-				.getItemIdAtPosition(mLastOrder - 1));
-		setTitle(mActivityTitle);
 	}
 
 	@Override
