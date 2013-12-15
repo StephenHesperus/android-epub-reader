@@ -16,6 +16,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -62,6 +63,7 @@ public class ReadingActivity extends Activity implements
 	private String mLastLink;
 	private int mLastPosition;
 	protected boolean mRestore;
+	private final Handler mHandler = new Handler();
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -180,6 +182,19 @@ public class ReadingActivity extends Activity implements
 
 			mRestore = true;
 			mBookView.loadUrl(mLastLink);
+
+			mHandler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					if (mBookView.getContentHeight() > 0) {
+						mBookView.scrollTo(0, mLastPosition);
+						mHandler.removeCallbacks(this);
+					} else {
+						mHandler.postDelayed(this, 100);
+					}
+				}
+			}, 100);
 		}
 
 		getLoaderManager().initLoader(0, null, this);
