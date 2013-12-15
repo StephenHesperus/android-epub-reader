@@ -62,7 +62,6 @@ public class ReadingActivity extends Activity implements
 	private SharedPreferences mPref;
 	private String mLastLink;
 	private int mLastPosition;
-	protected boolean mRestore;
 	private final Handler mHandler = new Handler();
 
 	private static final String SCHEME = "file://";
@@ -180,7 +179,6 @@ public class ReadingActivity extends Activity implements
 			mNavigationDrawerTitle = c.getString(c.getColumnIndex(Books.TITLE));
 			setTitle(mNavigationDrawerTitle);
 
-			mRestore = true;
 			mBookView.loadUrl(mLastLink);
 
 			mHandler.postDelayed(new Runnable() {
@@ -189,6 +187,7 @@ public class ReadingActivity extends Activity implements
 				public void run() {
 					if (mBookView.getContentHeight() > 0) {
 						mBookView.scrollTo(0, mLastPosition);
+
 						mHandler.removeCallbacks(this);
 					} else {
 						mHandler.postDelayed(this, 100);
