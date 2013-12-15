@@ -137,6 +137,8 @@ public class ReadingActivity extends Activity implements
 				super.onPageFinished(view, url);
 
 				applyTheme();
+
+				mLastLink = url;
 			}
 
 		};
@@ -177,6 +179,7 @@ public class ReadingActivity extends Activity implements
 			setTitle(mActivityTitle);
 
 			mRestore = true;
+			mBookView.loadUrl(mLastLink);
 		}
 
 		getLoaderManager().initLoader(0, null, this);
