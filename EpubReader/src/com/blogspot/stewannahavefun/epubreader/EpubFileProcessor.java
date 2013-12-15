@@ -78,6 +78,8 @@ public abstract class EpubFileProcessor {
 
 			if (ze == null) {
 				zis.close();
+				is.close();
+
 				throw new UnsupportedFileException("Invalid file "
 						+ mEpub.getName());
 			}
@@ -104,18 +106,30 @@ public abstract class EpubFileProcessor {
 					}
 				}
 
-				File file = new File(mOutput + File.separator + filename);
+				File file = new File(mOutput, filename);
 
-				(new File(file.getParent())).mkdirs();
+				if (!file.exists()) {
+					if (ze.isDirectory()) {
+						file.mkdir();
+					} else {
 
-				FileOutputStream fos = new FileOutputStream(file);
+						FileOutputStream fos = null;
+						try {
+							fos = new FileOutputStream(file);
 
-				fos.write(bytes);
-				fos.close();
+							fos.write(bytes);
+						} finally {
+							if (fos != null)
+								fos.close();
+						}
+					}
+				}
+
 				baos.close();
 			} while ((ze = zis.getNextEntry()) != null && mimetypeCorrect);
 
 			zis.close();
+			is.close();
 			unzipSuccess = true;
 		} catch (UnsupportedFileException e) {
 			File[] nonSence = mOutput.listFiles();
@@ -213,17 +227,30 @@ public abstract class EpubFileProcessor {
 			}
 
 			// metadata
+			// must have at least one, process the first one
 			String title = doc.getElementsByTagNameNS(DC_NS, TITLE).item(0)
 					.getTextContent();
-			String author = doc.getElementsByTagNameNS(DC_NS, AUTHOR).item(0)
-					.getTextContent();
-			String publisher = doc.getElementsByTagNameNS(DC_NS, PUBLISHER)
-					.item(0).getTextContent();
-			// String cover = doc.getElementById(COVER).getAttribute(HREF);
+			// optional
+			Element authorE = (Element) doc.getElementsByTagNameNS(DC_NS,
+					AUTHOR)
+					.item(0);
+			String author = "";
+			if (authorE != null) {
+				author = authorE.getTextContent();
+			}
+			// optional
+			Element publisherE = (Element) doc.getElementsByTagNameNS(DC_NS,
+					PUBLISHER).item(0);
+			String publisher = "";
+			if (publisherE != null) {
+				publisher = publisherE.getTextContent();
+			}
+			// must have at least one, process the first one
 			String bookId = doc.getElementsByTagNameNS(DC_NS, ID).item(0)
 					.getTextContent();
 
 			// .ncx file
+			// must have one
 			Element spine = (Element) doc.getElementsByTagName(SPINE).item(0);
 			String ncxId = spine.getAttribute(TOC);
 			Element ncx = doc.getElementById(ncxId);
