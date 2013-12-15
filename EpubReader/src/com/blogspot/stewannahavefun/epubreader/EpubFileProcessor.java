@@ -111,6 +111,7 @@ public abstract class EpubFileProcessor {
 				FileOutputStream fos = new FileOutputStream(file);
 
 				fos.write(bytes);
+				fos.flush();
 				fos.close();
 				baos.close();
 			} while ((ze = zis.getNextEntry()) != null && mimetypeCorrect);
