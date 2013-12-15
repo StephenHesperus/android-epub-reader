@@ -231,11 +231,20 @@ public abstract class EpubFileProcessor {
 			String title = doc.getElementsByTagNameNS(DC_NS, TITLE).item(0)
 					.getTextContent();
 			// optional
-			String author = doc.getElementsByTagNameNS(DC_NS, AUTHOR).item(0)
-					.getTextContent();
+			Element authorE = (Element) doc.getElementsByTagNameNS(DC_NS,
+					AUTHOR)
+					.item(0);
+			String author = "";
+			if (authorE != null) {
+				author = authorE.getTextContent();
+			}
 			// optional
-			String publisher = doc.getElementsByTagNameNS(DC_NS, PUBLISHER)
-					.item(0).getTextContent();
+			Element publisherE = (Element) doc.getElementsByTagNameNS(DC_NS,
+					PUBLISHER).item(0);
+			String publisher = "";
+			if (publisherE != null) {
+				publisher = publisherE.getTextContent();
+			}
 			// must have at least one, process the first one
 			String bookId = doc.getElementsByTagNameNS(DC_NS, ID).item(0)
 					.getTextContent();
