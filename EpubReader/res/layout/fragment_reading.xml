@@ -18,14 +18,14 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
-			android:background="@drawable/ic_btn_previous" />
+			android:background="@drawable/background_btn_previous" />
 
 		<Button
 			android:id="@+id/next"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
-			android:background="@drawable/ic_btn_next" />
+			android:background="@drawable/background_btn_next" />
 	</RelativeLayout>
 
 	<WebView
