@@ -25,13 +25,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.view.ViewStub.OnInflateListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
@@ -63,6 +67,8 @@ public class ReadingActivity extends Activity implements
 	private String mLastLink;
 	private int mLastPosition;
 	private final Handler mHandler = new Handler();
+	private Button mPreviousButton;
+	private Button mNextButton;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -79,6 +85,48 @@ public class ReadingActivity extends Activity implements
 		mActivityTitle = mNavigationDrawerTitle = getTitle().toString();
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.reading_drawer_layout);
 		mNavigationList = (ListView) findViewById(R.id.navigation_list);
+
+		ViewStub viewStub = (ViewStub) findViewById(R.id.view_stub);
+
+		viewStub.setOnInflateListener(new OnInflateListener() {
+
+			@Override
+			public void onInflate(ViewStub stub, View inflated) {
+
+				mPreviousButton = (Button) findViewById(R.id.previous);
+				mNextButton = (Button) findViewById(R.id.next);
+
+				mPreviousButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						int position = (mLastOrder != 1)
+								? (mLastOrder - 2)
+								: 0;
+						long id = mNavigationList.getItemIdAtPosition(position);
+
+						onNavigationLabelClick(id);
+						mNavigationList.setItemChecked(position, true);
+					}
+				});
+				mNextButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						int position = (mLastOrder < mNavigationList.getCount())
+								? mLastOrder
+								: (mNavigationList.getCount() - 1);
+						long id = mNavigationList.getItemIdAtPosition(position);
+
+						onNavigationLabelClick(id);
+						mNavigationList.setItemChecked(position, true);
+					}
+				});
+			}
+		});
+
+		viewStub.inflate();
+
 		mBookView = (WebView) findViewById(R.id.book_view);
 		mNavigationDrawer = (RelativeLayout) findViewById(R.id.navigation_drawer);
 
@@ -214,6 +262,7 @@ public class ReadingActivity extends Activity implements
 					.getColumnIndex(Contents.NAVIGATION_LABEL));
 
 			mActivityTitle = label;
+			setTitle(mActivityTitle);
 			mBookView.loadUrl(constructPageUrl(link));
 
 			mLastOrder = c.getInt(c
