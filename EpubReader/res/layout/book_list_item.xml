@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="96dp" >
+
+	<ImageView
+		android:id="@+id/cover"
+		android:layout_width="96dp"
+		android:layout_height="96dp"
+		android:adjustViewBounds="true"
+		android:contentDescription="@string/alt_cover"
+		android:src="@drawable/ic_epub_cover" />
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="96dp"
+		android:layout_toRightOf="@id/cover"
+		android:gravity="center_vertical"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp" >
+
+		<TextView
+			android:id="@+id/title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:text="@string/alt_title"
+			android:textColor="?android:attr/textColorPrimary"
+			android:textSize="14sp" />
+
+		<TextView
+			android:id="@+id/author"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/title"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:text="@string/alt_author"
+			android:textColor="?android:attr/textColorSecondary"
+			android:textSize="12sp" />
+
+		<TextView
+			android:id="@+id/publisher"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/author"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:text="@string/alt_publisher"
+			android:textColor="?android:attr/textColorSecondary"
+			android:textSize="12sp" />
+
+		<com.blogspot.stewannahavefun.epubreader.DateTextView
+			android:id="@+id/added_date"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/publisher"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:text="@string/alt_added_date"
+			android:textColor="?android:attr/textColorSecondary"
+			android:textSize="12sp" />
+
+		<com.blogspot.stewannahavefun.epubreader.DateTextView
+			android:id="@+id/last_reading_date"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/added_date"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:text="@string/alt_lasting_reading_date"
+			android:textColor="?android:attr/textColorSecondary"
+			android:textSize="12sp" />
+	</RelativeLayout>
+
+</RelativeLayout>
