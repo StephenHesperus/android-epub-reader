@@ -13,7 +13,7 @@ import com.blogspot.stewannahavefun.epubreader.EpubFileProcessor.UnsupportedFile
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
 
-public class ProcessEpubFileService extends IntentService {
+public class EpubReaderService extends IntentService {
 	public class Processor extends EpubFileProcessor {
 
 		public Processor(File epub, File output) {
@@ -43,7 +43,7 @@ public class ProcessEpubFileService extends IntentService {
 			.getAbsolutePath() + "/epubreader-test/data/";
 	private String mBookId;
 
-	public ProcessEpubFileService() {
+	public EpubReaderService() {
 		super(TAG);
 	}
 
