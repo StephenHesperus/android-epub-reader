@@ -38,9 +38,21 @@
 		</activity>
 
 		<service
-			android:name="com.blogspot.stewannahavefun.epubreader.ProcessEpubFileService"
+			android:name="com.blogspot.stewannahavefun.epubreader.EpubReaderService"
 			android:enabled="true"
 			android:exported="false" >
+			<intent-filter>
+				<action android:name="com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB" />
+
+				<data android:mimeType="application/epub+zip" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
 		</service>
 
 		<provider

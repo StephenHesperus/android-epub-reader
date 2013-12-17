@@ -3,10 +3,13 @@ package com.blogspot.stewannahavefun.epubreader;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
@@ -57,6 +60,9 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
 	private static final String ACTION_UNSUPPORTED_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE";
 	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
+	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
+	private static final String ACTION_ADD_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB";
+	private static final String MIMETYPE = "application/epub+zip";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 
@@ -172,6 +178,11 @@ public class BookListActivity extends Activity implements
 
 			return true;
 
+		case R.id.action_rescan:
+			showRescanWarningDialog();
+
+			return true;
+
 		case R.id.action_about:
 			Intent about = new Intent(this, AboutActivity.class);
 
@@ -182,6 +193,37 @@ public class BookListActivity extends Activity implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void showRescanWarningDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle(R.string.rescan_warning_dialog_title)
+				.setMessage(R.string.rescan_warning_dialog_message)
+				.setCancelable(true)
+				.setNegativeButton(android.R.string.cancel,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+							}
+						})
+				.setPositiveButton(R.string.rescan,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent rescan = new Intent(ACTION_RESCAN);
+
+								startService(rescan);
+							}
+						});
+
+		builder.create()
+				.show();
 	}
 
 	@Override
@@ -205,10 +247,9 @@ public class BookListActivity extends Activity implements
 
 	@Override
 	public void onFilePick(Context context, File file) {
-		Intent process = new Intent(BookListActivity.this,
-				ProcessEpubFileService.class);
+		Intent process = new Intent(ACTION_ADD_EPUB);
 
-		process.setData(Uri.fromFile(file));
+		process.setDataAndType(Uri.fromFile(file), MIMETYPE);
 		context.startService(process);
 	}
 }

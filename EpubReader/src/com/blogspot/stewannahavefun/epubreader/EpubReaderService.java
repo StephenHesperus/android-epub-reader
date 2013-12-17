@@ -13,7 +13,7 @@ import com.blogspot.stewannahavefun.epubreader.EpubFileProcessor.UnsupportedFile
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
 
-public class ProcessEpubFileService extends IntentService {
+public class EpubReaderService extends IntentService {
 	public class Processor extends EpubFileProcessor {
 
 		public Processor(File epub, File output) {
@@ -37,16 +37,26 @@ public class ProcessEpubFileService extends IntentService {
 	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
 	private static final String ACTION_UNSUPPORTED_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE";
 	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
+	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
+	private static final String ACTION_ADD_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB";
 	private final String mBase = Environment.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
 	private String mBookId;
 
-	public ProcessEpubFileService() {
+	public EpubReaderService() {
 		super(TAG);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		if (ACTION_RESCAN.equals(intent.getAction())) {
+			rescanExistingBooks(intent);
+		} else if (ACTION_ADD_EPUB.equals(intent.getAction())) {
+			addEpubFile(intent);
+		}
+	}
+
+	private void addEpubFile(Intent intent) {
 		if (intent.hasExtra(EXTRA_EPUB_PATH)
 				|| intent.hasExtra(EXTRA_OUTPUT_DIRECTORY)) {
 			try {
@@ -83,11 +93,12 @@ public class ProcessEpubFileService extends IntentService {
 
 				ContentValues bookInfo = processor.readOpfFile();
 				bookInfo.remove(NCX_PATH);
-				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
 
 				mBookId = bookInfo.getAsString(Books.BOOK_ID);
 
 				processor.readNcxFile();
+
+				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
 			}
 		} catch (UnsupportedFileException e) {
 			Intent unsupported = new Intent(ACTION_UNSUPPORTED_FILE);
@@ -96,6 +107,35 @@ public class ProcessEpubFileService extends IntentService {
 			sendBroadcast(unsupported);
 		} catch (FileIsNotConstructedException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void rescanExistingBooks(Intent intent) {
+		getContentResolver().delete(Books.BOOKS_URI, null, null);
+		getContentResolver().delete(Contents.CONTENTS_URI, null, null);
+
+		File base = new File(mBase);
+		File[] epubList = base.listFiles();
+
+		for (File epub : epubList) {
+			Processor processor = new Processor(null, epub);
+
+			processor.readContainerDotXmlFile();
+			try {
+				ContentValues bookInfo = processor.readOpfFile();
+
+				bookInfo.remove(NCX_PATH);
+
+				mBookId = bookInfo.getAsString(Books.BOOK_ID);
+
+				processor.readNcxFile();
+
+				// update book table at last so that contents table is ready to
+				// use when the book shows up in book list
+				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+			} catch (FileIsNotConstructedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

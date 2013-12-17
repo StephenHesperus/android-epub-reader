@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="alt_cover">Book Cover</string>
+	<string name="alt_title">Title</string>
+	<string name="alt_author">Author</string>
+	<string name="alt_publisher">Publisher</string>
+	<string name="alt_added_date">Added: 11/26/2013</string>
+	<string name="alt_lasting_reading_date">Recently: 9:00 11/26/2013</string>
+
+	<!-- action bar -->
+	<string name="action_open">Open</string>
+	<string name="action_rescan">Rescan</string>
+
+	<!-- rescan waring dialog -->
+	<string name="rescan_warning_dialog_title">Rescan Existing Books</string>
+	<string name="rescan_warning_dialog_message">All books will be removed from the book list and added again!</string>
+	<string name="rescan">Rescan</string>
+
+</resources>
