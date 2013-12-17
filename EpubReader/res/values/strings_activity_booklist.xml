@@ -17,4 +17,7 @@
 	<string name="rescan_warning_dialog_message">All books will be removed from the book list and added again!</string>
 	<string name="rescan">Rescan</string>
 
+	<!-- actionmode -->
+	<string name="action_delete">Delete</string>
+
 </resources>
