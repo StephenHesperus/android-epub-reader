@@ -138,7 +138,7 @@ public class BookListActivity extends Activity implements
 		bookList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 		bookList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
-			private int mCheckedItems = 0;
+			private int mCheckedItems;
 
 			@Override
 			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -157,6 +157,8 @@ public class BookListActivity extends Activity implements
 				MenuInflater inflater = mode.getMenuInflater();
 
 				inflater.inflate(R.menu.actionmode_booklist, menu);
+
+				mCheckedItems = 0;
 
 				return true;
 			}
