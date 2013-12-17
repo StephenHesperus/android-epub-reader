@@ -171,6 +171,16 @@ public class BookListActivity extends Activity implements
 			public void onItemCheckedStateChanged(ActionMode mode,
 					int position,
 					long id, boolean checked) {
+				if (checked) {
+					mCheckedItems++;
+				} else {
+					mCheckedItems--;
+				}
+
+				String title = mCheckedItems
+						+ (mCheckedItems > 1 ? " Books" : "Book")
+						+ " Selected";
+				mode.setTitle(title);
 			}
 		});
 
