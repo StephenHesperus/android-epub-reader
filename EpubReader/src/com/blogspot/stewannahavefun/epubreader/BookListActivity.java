@@ -16,9 +16,13 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -63,8 +67,11 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
 	private static final String ACTION_ADD_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB";
 	private static final String MIMETYPE = "application/epub+zip";
+	protected static String ACTION_DELETE_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB";
+	protected static final String ACTION_DELETE_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
+	private GridView mBookList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +127,9 @@ public class BookListActivity extends Activity implements
 
 		mAdapter.setViewBinder(binder);
 
-		GridView bookList = (GridView) findViewById(R.id.book_list);
-		bookList.setAdapter(mAdapter);
-		bookList.setOnItemClickListener(new OnItemClickListener() {
+		mBookList = (GridView) findViewById(R.id.book_list);
+		mBookList.setAdapter(mAdapter);
+		mBookList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -131,7 +138,102 @@ public class BookListActivity extends Activity implements
 			}
 		});
 
+		mBookList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+		mBookList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+			private int mCheckedItems;
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				MenuInflater inflater = mode.getMenuInflater();
+
+				inflater.inflate(R.menu.actionmode_booklist, menu);
+
+				mCheckedItems = 0;
+
+				return true;
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					showDeletionConfirmDialog(mode);
+
+					return true;
+
+				default:
+					return false;
+				}
+			}
+
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position,
+					long id, boolean checked) {
+				if (checked) {
+					mCheckedItems++;
+				} else {
+					mCheckedItems--;
+				}
+
+				String title = mCheckedItems
+						+ (mCheckedItems > 1 ? " Books" : "Book")
+						+ " Selected";
+				mode.setTitle(title);
+			}
+		});
+
 		getLoaderManager().initLoader(0, null, this);
+	}
+
+	protected void showDeletionConfirmDialog(final ActionMode mode) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle(R.string.deletion_confirm_dialog_title)
+				.setMessage(R.string.deletion_confirm_dialog_message)
+				.setCancelable(true)
+				.setNegativeButton(android.R.string.cancel,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+								mode.finish();
+							}
+						})
+				.setPositiveButton(R.string.action_delete,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								Intent delete = new Intent(ACTION_DELETE_EPUB);
+								long[] ids = mBookList.getCheckedItemIds();
+
+								delete.putExtra(ACTION_DELETE_EPUB_EXTRA, ids);
+
+								startService(delete);
+
+								mode.finish();
+							}
+						});
+
+		builder.create()
+				.show();
 	}
 
 	private void onBookClick(final long id) {
