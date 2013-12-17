@@ -108,4 +108,33 @@ public class ProcessEpubFileService extends IntentService {
 			e.printStackTrace();
 		}
 	}
+
+	private void rescanExistingBooks(Intent intent) {
+		getContentResolver().delete(Books.BOOKS_URI, null, null);
+		getContentResolver().delete(Contents.CONTENTS_URI, null, null);
+
+		File base = new File(mBase);
+		File[] epubList = base.listFiles();
+
+		for (File epub : epubList) {
+			Processor processor = new Processor(null, epub);
+
+			processor.readContainerDotXmlFile();
+			try {
+				ContentValues bookInfo = processor.readOpfFile();
+
+				bookInfo.remove(NCX_PATH);
+
+				mBookId = bookInfo.getAsString(Books.BOOK_ID);
+
+				processor.readNcxFile();
+
+				// update book table at last so that contents table is ready to
+				// use when the book shows up in book list
+				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+			} catch (FileIsNotConstructedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
