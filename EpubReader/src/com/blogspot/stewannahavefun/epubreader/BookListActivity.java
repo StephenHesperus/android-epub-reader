@@ -67,6 +67,8 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
 	private static final String ACTION_ADD_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB";
 	private static final String MIMETYPE = "application/epub+zip";
+	protected static String ACTION_DELETE_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB";
+	protected static final String ACTION_DELETE_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
@@ -219,6 +221,14 @@ public class BookListActivity extends Activity implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
+								Intent delete = new Intent(ACTION_DELETE_EPUB);
+								long[] ids = mBookList.getCheckedItemIds();
+
+								delete.putExtra(ACTION_DELETE_EPUB_EXTRA, ids);
+
+								startService(delete);
+
+								mode.finish();
 							}
 						});
 
