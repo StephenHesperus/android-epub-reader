@@ -172,6 +172,11 @@ public class BookListActivity extends Activity implements
 
 			return true;
 
+		case R.id.action_rescan:
+			showRescanWarningDialog();
+
+			return true;
+
 		case R.id.action_about:
 			Intent about = new Intent(this, AboutActivity.class);
 
