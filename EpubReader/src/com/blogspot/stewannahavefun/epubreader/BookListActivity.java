@@ -16,7 +16,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -134,6 +136,43 @@ public class BookListActivity extends Activity implements
 		});
 
 		bookList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+		bookList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+
+			private int mCheckedItems = 0;
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				MenuInflater inflater = mode.getMenuInflater();
+
+				inflater.inflate(R.menu.actionmode_booklist, menu);
+
+				return true;
+			}
+
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position,
+					long id, boolean checked) {
+			}
+		});
 
 		getLoaderManager().initLoader(0, null, this);
 	}
