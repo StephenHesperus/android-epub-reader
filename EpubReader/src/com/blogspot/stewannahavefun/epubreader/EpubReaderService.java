@@ -108,6 +108,20 @@ public class EpubReaderService extends IntentService {
 		}
 	}
 
+	private void recursiveDeleteDirectory(File directory, FilenameFilter filter) {
+		File[] files = directory.listFiles(filter);
+
+		for (File file : files) {
+			if (file.isDirectory()) {
+				recursiveDeleteDirectory(file, filter);
+			} else if (file.isFile()) {
+				file.delete();
+			}
+		}
+
+		directory.delete();
+	}
+
 	private void addEpubFile(Intent intent) {
 		if (intent.hasExtra(EXTRA_EPUB_PATH)
 				|| intent.hasExtra(EXTRA_OUTPUT_DIRECTORY)) {
