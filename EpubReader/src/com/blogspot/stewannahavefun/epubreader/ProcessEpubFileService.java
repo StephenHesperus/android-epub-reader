@@ -93,11 +93,12 @@ public class ProcessEpubFileService extends IntentService {
 
 				ContentValues bookInfo = processor.readOpfFile();
 				bookInfo.remove(NCX_PATH);
-				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
 
 				mBookId = bookInfo.getAsString(Books.BOOK_ID);
 
 				processor.readNcxFile();
+
+				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
 			}
 		} catch (UnsupportedFileException e) {
 			Intent unsupported = new Intent(ACTION_UNSUPPORTED_FILE);
