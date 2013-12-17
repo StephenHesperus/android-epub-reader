@@ -197,6 +197,35 @@ public class BookListActivity extends Activity implements
 		getLoaderManager().initLoader(0, null, this);
 	}
 
+	protected void showDeletionConfirmDialog(final ActionMode mode) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle(R.string.deletion_confirm_dialog_title)
+				.setMessage(R.string.deletion_confirm_dialog_message)
+				.setCancelable(true)
+				.setNegativeButton(android.R.string.cancel,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+								mode.finish();
+							}
+						})
+				.setPositiveButton(R.string.action_delete,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+							}
+						});
+
+		builder.create()
+				.show();
+	}
+
 	private void onBookClick(final long id) {
 		Intent reading = new Intent(this, ReadingActivity.class);
 
