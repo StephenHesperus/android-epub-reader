@@ -112,6 +112,7 @@ public abstract class EpubFileProcessor {
 					if (ze.isDirectory()) {
 						file.mkdir();
 					} else {
+						file.getParentFile().mkdirs();
 
 						FileOutputStream fos = null;
 						try {
