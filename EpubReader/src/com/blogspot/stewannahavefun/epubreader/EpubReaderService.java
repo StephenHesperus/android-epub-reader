@@ -39,7 +39,8 @@ public class EpubReaderService extends IntentService {
 	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
 	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
 	private static final String ACTION_ADD_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB";
-	private final String mBase = Environment.getExternalStorageDirectory()
+	private static final String BASE = Environment
+			.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
 	private String mBookId;
 
@@ -69,7 +70,7 @@ public class EpubReaderService extends IntentService {
 
 		Uri data = intent.getData();
 		File epub = new File(data.getPath());
-		File base = new File(mBase);
+		File base = new File(BASE);
 		File output = new File(base, epub.getName());
 
 		if (output.isDirectory()) {
@@ -114,7 +115,7 @@ public class EpubReaderService extends IntentService {
 		getContentResolver().delete(Books.BOOKS_URI, null, null);
 		getContentResolver().delete(Contents.CONTENTS_URI, null, null);
 
-		File base = new File(mBase);
+		File base = new File(BASE);
 		File[] epubList = base.listFiles();
 
 		for (File epub : epubList) {
