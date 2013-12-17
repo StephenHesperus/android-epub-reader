@@ -38,7 +38,7 @@
 		</activity>
 
 		<service
-			android:name="com.blogspot.stewannahavefun.epubreader.ProcessEpubFileService"
+			android:name="com.blogspot.stewannahavefun.epubreader.EpubReaderService"
 			android:enabled="true"
 			android:exported="false" >
 			<intent-filter>
