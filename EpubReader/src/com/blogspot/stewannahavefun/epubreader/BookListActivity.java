@@ -61,6 +61,7 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_UNSUPPORTED_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE";
 	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
 	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
+	private static final String ACTION_ADD_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 
@@ -245,8 +246,7 @@ public class BookListActivity extends Activity implements
 
 	@Override
 	public void onFilePick(Context context, File file) {
-		Intent process = new Intent(BookListActivity.this,
-				ProcessEpubFileService.class);
+		Intent process = new Intent(ACTION_ADD_EPUB);
 
 		process.setData(Uri.fromFile(file));
 		context.startService(process);
