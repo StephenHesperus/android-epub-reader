@@ -37,6 +37,8 @@ public class ProcessEpubFileService extends IntentService {
 	private static final String ACTION_DUPLICATION_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DUPLICATION_EXTRA";
 	private static final String ACTION_UNSUPPORTED_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE";
 	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
+	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
+	private static final String ACTION_ADD_EPUB_FILE = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_FILE";
 	private final String mBase = Environment.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
 	private String mBookId;
@@ -47,6 +49,13 @@ public class ProcessEpubFileService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		if (ACTION_RESCAN.equals(intent.getAction())) {
+			rescanExistingBooks(intent);
+		} else if (ACTION_ADD_EPUB_FILE.equals(intent.getAction())) {
+			addEpubFile(intent);
+		}
+	}
+
 		if (intent.hasExtra(EXTRA_EPUB_PATH)
 				|| intent.hasExtra(EXTRA_OUTPUT_DIRECTORY)) {
 			try {
