@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -130,6 +132,8 @@ public class BookListActivity extends Activity implements
 				onBookClick(id);
 			}
 		});
+
+		bookList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
 
 		getLoaderManager().initLoader(0, null, this);
 	}
