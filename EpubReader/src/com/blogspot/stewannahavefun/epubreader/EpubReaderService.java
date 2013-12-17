@@ -39,6 +39,8 @@ public class EpubReaderService extends IntentService {
 	private static final String ACTION_UNSUPPORTED_FILE_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_UNSUPPORTED_FILE_EXTRA";
 	private static final String ACTION_RESCAN = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN";
 	private static final String ACTION_ADD_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB";
+	private static final String ACTION_DELETE_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB";
+	private static final String ACTION_DELETE_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB_EXTRA";
 	private static final String BASE = Environment
 			.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
@@ -54,6 +56,8 @@ public class EpubReaderService extends IntentService {
 			rescanExistingBooks(intent);
 		} else if (ACTION_ADD_EPUB.equals(intent.getAction())) {
 			addEpubFile(intent);
+		} else if (ACTION_DELETE_EPUB.equals(intent.getAction())) {
+			deleteEpubs(intent);
 		}
 	}
 
