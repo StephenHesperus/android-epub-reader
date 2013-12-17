@@ -56,6 +56,7 @@ public class ProcessEpubFileService extends IntentService {
 		}
 	}
 
+	private void addEpubFile(Intent intent) {
 		if (intent.hasExtra(EXTRA_EPUB_PATH)
 				|| intent.hasExtra(EXTRA_OUTPUT_DIRECTORY)) {
 			try {
