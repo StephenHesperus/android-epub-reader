@@ -165,8 +165,15 @@ public class BookListActivity extends Activity implements
 
 			@Override
 			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-				// TODO Auto-generated method stub
-				return false;
+				switch (item.getItemId()) {
+				case R.id.action_delete:
+					showDeletionConfirmDialog(mode);
+
+					return true;
+
+				default:
+					return false;
+				}
 			}
 
 			@Override
