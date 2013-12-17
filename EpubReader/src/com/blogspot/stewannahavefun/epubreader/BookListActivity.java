@@ -69,6 +69,7 @@ public class BookListActivity extends Activity implements
 	private static final String MIMETYPE = "application/epub+zip";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
+	private GridView mBookList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,9 +125,9 @@ public class BookListActivity extends Activity implements
 
 		mAdapter.setViewBinder(binder);
 
-		GridView bookList = (GridView) findViewById(R.id.book_list);
-		bookList.setAdapter(mAdapter);
-		bookList.setOnItemClickListener(new OnItemClickListener() {
+		mBookList = (GridView) findViewById(R.id.book_list);
+		mBookList.setAdapter(mAdapter);
+		mBookList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -135,8 +136,8 @@ public class BookListActivity extends Activity implements
 			}
 		});
 
-		bookList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-		bookList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+		mBookList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+		mBookList.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
 			private int mCheckedItems;
 
