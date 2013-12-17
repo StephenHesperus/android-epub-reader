@@ -12,4 +12,9 @@
 	<string name="action_open">Open</string>
 	<string name="action_rescan">Rescan</string>
 
+	<!-- rescan waring dialog -->
+	<string name="rescan_warning_dialog_title">Rescan Existing Books</string>
+	<string name="rescan_warning_dialog_message">All books will be removed from the book list and added again!</string>
+	<string name="rescan">Rescan</string>
+
 </resources>
