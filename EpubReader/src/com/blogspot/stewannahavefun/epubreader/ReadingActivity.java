@@ -252,6 +252,12 @@ public class ReadingActivity extends Activity implements
 					mNavigationList.setItemChecked(mLastOrder - 1, true);
 				}
 
+				mLastPosition = mBookView.getScrollY();
+
+				String first = view.getOriginalUrl();
+
+				mHistoryStack.push(first);
+
 				return super.shouldOverrideUrlLoading(view, url);
 			}
 
