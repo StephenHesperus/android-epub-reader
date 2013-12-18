@@ -46,7 +46,8 @@
 				android:layout_height="wrap_content"
 				android:layout_alignParentRight="true"
 				android:contentDescription="@string/button_history_forward"
-				android:src="@drawable/ic_btn_history_forward" />
+				android:src="@drawable/ic_btn_history_forward"
+				android:visibility="gone" />
 		</RelativeLayout>
 
 		<ImageButton
