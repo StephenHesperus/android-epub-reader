@@ -1,6 +1,7 @@
 package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
+import java.util.Stack;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -71,6 +72,7 @@ public class ReadingActivity extends Activity implements
 	private ImageButton mNextButton;
 	protected ImageButton mBackwardButton;
 	protected ImageButton mForwardButton;
+	private Stack<String> mHistoryStack;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -82,6 +84,8 @@ public class ReadingActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reading);
+
+		mHistoryStack = new Stack<String>();
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
