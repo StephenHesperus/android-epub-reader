@@ -35,7 +35,7 @@ import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
@@ -67,8 +67,8 @@ public class ReadingActivity extends Activity implements
 	private String mLastLink;
 	private int mLastPosition;
 	private final Handler mHandler = new Handler();
-	private Button mPreviousButton;
-	private Button mNextButton;
+	private ImageButton mPreviousButton;
+	private ImageButton mNextButton;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -94,8 +94,8 @@ public class ReadingActivity extends Activity implements
 			@Override
 			public void onInflate(ViewStub stub, View inflated) {
 
-				mPreviousButton = (Button) findViewById(R.id.previous);
-				mNextButton = (Button) findViewById(R.id.next);
+				mPreviousButton = (ImageButton) findViewById(R.id.previous);
+				mNextButton = (ImageButton) findViewById(R.id.next);
 
 				mPreviousButton.setOnClickListener(new OnClickListener() {
 
