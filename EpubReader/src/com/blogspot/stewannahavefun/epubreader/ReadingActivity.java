@@ -128,6 +128,28 @@ public class ReadingActivity extends Activity implements
 
 				mBackwardButton = (ImageButton) findViewById(R.id.history_backward);
 				mForwardButton = (ImageButton) findViewById(R.id.history_forward);
+
+				mBackwardButton.setVisibility(View.INVISIBLE);
+				mForwardButton.setVisibility(View.INVISIBLE);
+
+				mBackwardButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (mBookView.canGoBack()) {
+							mBookView.goBack();
+						}
+					}
+				});
+				mForwardButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (mBookView.canGoForward()) {
+							mBookView.goForward();
+						}
+					}
+				});
 			}
 		});
 
