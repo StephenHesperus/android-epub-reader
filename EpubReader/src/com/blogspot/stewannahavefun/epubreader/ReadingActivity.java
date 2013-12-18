@@ -128,6 +128,7 @@ public class ReadingActivity extends Activity implements
 
 						onNavigationLabelClick(id);
 						mNavigationList.setItemChecked(position, true);
+						mNavigationList.setSelection(position);
 					}
 				});
 				mNextButton.setOnClickListener(new OnClickListener() {
@@ -141,6 +142,7 @@ public class ReadingActivity extends Activity implements
 
 						onNavigationLabelClick(id);
 						mNavigationList.setItemChecked(position, true);
+						mNavigationList.setSelection(position);
 					}
 				});
 
@@ -275,6 +277,7 @@ public class ReadingActivity extends Activity implements
 					.getColumnIndex(Contents.NAVIGATION_ORDER));
 
 			mNavigationList.setItemChecked(mLastOrder - 1, true);
+			mNavigationList.setSelection(mLastOrder - 1);
 		}
 		c.close();
 	}
@@ -447,6 +450,7 @@ public class ReadingActivity extends Activity implements
 		mAdapter.swapCursor(c);
 
 		mNavigationList.setItemChecked(mLastOrder - 1, true);
+		mNavigationList.setSelection(mLastOrder - 1);
 
 		if (mLastLink.isEmpty()) {
 			onNavigationLabelClick(mNavigationList
