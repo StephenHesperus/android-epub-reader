@@ -13,19 +13,23 @@
 		android:background="#0000"
 		android:gravity="center" >
 
-		<Button
+		<ImageButton
 			android:id="@+id/previous"
+			style="?android:attr/borderlessButtonStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
-			android:background="@drawable/background_btn_previous" />
+			android:contentDescription="@string/button_previous"
+			android:src="@drawable/ic_btn_previous" />
 
-		<Button
+		<ImageButton
 			android:id="@+id/next"
+			style="?android:attr/borderlessButtonStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
-			android:background="@drawable/background_btn_next" />
+			android:contentDescription="@string/button_next"
+			android:src="@drawable/ic_btn_next" />
 	</RelativeLayout>
 
 	<WebView
