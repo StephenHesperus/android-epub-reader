@@ -272,7 +272,7 @@ public class ReadingActivity extends Activity implements
 
 				mLastPosition = mBookView.getScrollY();
 
-				String first = view.getOriginalUrl();
+				String first = mBookView.getOriginalUrl();
 
 				mHistoryStack.push(first);
 
