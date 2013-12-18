@@ -271,6 +271,29 @@ public class ReadingActivity extends Activity implements
 		}
 	}
 
+	protected void preparePageJumping(String url) {
+		String path = url.substring(SCHEME.length()
+				+ mLocationBase.length() + 1);
+		String book = Contents.BOOK_ID + " = \"" + mBookId + "\"";
+		String link = Contents.NAVIGATION_LINK + " = \"" + path
+				+ "\"";
+		String selection = "(" + book + ") AND (" + link + ")";
+		Cursor c = getContentResolver().query(
+				Contents.CONTENTS_URI,
+				EpubReader.CONTENTS_ITEM_PROJECTION,
+				selection,
+				null,
+				null);
+
+		if (c != null && c.moveToFirst()) {
+			mLastOrder = c.getInt(c
+					.getColumnIndex(Contents.NAVIGATION_ORDER));
+
+			mNavigationList.setItemChecked(mLastOrder - 1, true);
+		}
+		c.close();
+	}
+
 	@SuppressLint("SetJavaScriptEnabled")
 	private void enableJavaScript(WebSettings webSettings) {
 		webSettings.setJavaScriptEnabled(true);
