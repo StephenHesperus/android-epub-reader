@@ -71,7 +71,6 @@ public class ReadingActivity extends Activity implements
 	private ImageButton mPreviousButton;
 	private ImageButton mNextButton;
 	protected ImageButton mBackwardButton;
-	protected ImageButton mForwardButton;
 	private Stack<String> mHistoryStack;
 	private Runnable mScrollRunnable;
 
@@ -146,11 +145,8 @@ public class ReadingActivity extends Activity implements
 				});
 
 				mBackwardButton = (ImageButton) findViewById(R.id.history_backward);
-				mForwardButton = (ImageButton) findViewById(R.id.history_forward);
 
 				mBackwardButton.setVisibility(View.INVISIBLE);
-				mForwardButton.setVisibility(View.INVISIBLE);
-
 				mBackwardButton.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -161,15 +157,6 @@ public class ReadingActivity extends Activity implements
 							preparePageJumping(url);
 							mBookView.loadUrl(url);
 							mHandler.postDelayed(mScrollRunnable, 100);
-						}
-					}
-				});
-				mForwardButton.setOnClickListener(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						if (mBookView.canGoForward()) {
-							mBookView.goForward();
 						}
 					}
 				});
@@ -244,9 +231,6 @@ public class ReadingActivity extends Activity implements
 				mBackwardButton.setVisibility(mHistoryStack.empty()
 						? View.INVISIBLE
 						: View.VISIBLE);
-				mForwardButton.setVisibility(mBookView.canGoForward()
-						? View.VISIBLE
-						: View.INVISIBLE);
 			}
 
 			@Override
