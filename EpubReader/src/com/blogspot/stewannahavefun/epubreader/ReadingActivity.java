@@ -1,6 +1,7 @@
 package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
+import java.util.Stack;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -35,7 +36,7 @@ import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
@@ -67,8 +68,11 @@ public class ReadingActivity extends Activity implements
 	private String mLastLink;
 	private int mLastPosition;
 	private final Handler mHandler = new Handler();
-	private Button mPreviousButton;
-	private Button mNextButton;
+	private ImageButton mPreviousButton;
+	private ImageButton mNextButton;
+	protected ImageButton mBackwardButton;
+	private Stack<String> mHistoryStack;
+	private Runnable mScrollRunnable;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -80,6 +84,22 @@ public class ReadingActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reading);
+
+		mHistoryStack = new Stack<String>();
+
+		mScrollRunnable = new Runnable() {
+
+			@Override
+			public void run() {
+				if (mBookView.getContentHeight() > 0) {
+					mBookView.scrollTo(0, mLastPosition);
+
+					mHandler.removeCallbacks(this);
+				} else {
+					mHandler.postDelayed(this, 100);
+				}
+			}
+		};
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -94,8 +114,8 @@ public class ReadingActivity extends Activity implements
 			@Override
 			public void onInflate(ViewStub stub, View inflated) {
 
-				mPreviousButton = (Button) findViewById(R.id.previous);
-				mNextButton = (Button) findViewById(R.id.next);
+				mPreviousButton = (ImageButton) findViewById(R.id.previous);
+				mNextButton = (ImageButton) findViewById(R.id.next);
 
 				mPreviousButton.setOnClickListener(new OnClickListener() {
 
@@ -121,6 +141,23 @@ public class ReadingActivity extends Activity implements
 
 						onNavigationLabelClick(id);
 						mNavigationList.setItemChecked(position, true);
+					}
+				});
+
+				mBackwardButton = (ImageButton) findViewById(R.id.history_backward);
+
+				mBackwardButton.setVisibility(View.INVISIBLE);
+				mBackwardButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						String url = mHistoryStack.pop();
+
+						if (url != null) {
+							preparePageJumping(url);
+							mBookView.loadUrl(url);
+							mHandler.postDelayed(mScrollRunnable, 100);
+						}
 					}
 				});
 			}
@@ -190,6 +227,22 @@ public class ReadingActivity extends Activity implements
 				applyTheme();
 
 				mLastLink = url;
+
+				mBackwardButton.setVisibility(mHistoryStack.empty()
+						? View.INVISIBLE
+						: View.VISIBLE);
+			}
+
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				preparePageJumping(url);
+				mLastPosition = mBookView.getScrollY();
+
+				String first = mBookView.getOriginalUrl();
+
+				mHistoryStack.push(first);
+
+				return super.shouldOverrideUrlLoading(view, url);
 			}
 
 		};
@@ -201,6 +254,29 @@ public class ReadingActivity extends Activity implements
 		if (start.hasExtra(Books._ID)) {
 			prepareReadingSession(start.getLongExtra(Books._ID, 1));
 		}
+	}
+
+	protected void preparePageJumping(String url) {
+		String path = url.substring(SCHEME.length()
+				+ mLocationBase.length() + 1);
+		String book = Contents.BOOK_ID + " = \"" + mBookId + "\"";
+		String link = Contents.NAVIGATION_LINK + " = \"" + path
+				+ "\"";
+		String selection = "(" + book + ") AND (" + link + ")";
+		Cursor c = getContentResolver().query(
+				Contents.CONTENTS_URI,
+				EpubReader.CONTENTS_ITEM_PROJECTION,
+				selection,
+				null,
+				null);
+
+		if (c != null && c.moveToFirst()) {
+			mLastOrder = c.getInt(c
+					.getColumnIndex(Contents.NAVIGATION_ORDER));
+
+			mNavigationList.setItemChecked(mLastOrder - 1, true);
+		}
+		c.close();
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
@@ -231,20 +307,9 @@ public class ReadingActivity extends Activity implements
 
 			mBookView.loadUrl(mLastLink);
 
-			mHandler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					if (mBookView.getContentHeight() > 0) {
-						mBookView.scrollTo(0, mLastPosition);
-
-						mHandler.removeCallbacks(this);
-					} else {
-						mHandler.postDelayed(this, 100);
-					}
-				}
-			}, 100);
+			mHandler.postDelayed(mScrollRunnable, 100);
 		}
+		c.close();
 
 		getLoaderManager().initLoader(0, null, this);
 	}
@@ -289,12 +354,12 @@ public class ReadingActivity extends Activity implements
 
 		ContentValues v = new ContentValues();
 		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
-		int offsetY = mBookView.getScrollY();
+		mLastPosition = mBookView.getScrollY();
 
 		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
 		v.put(Books.LAST_READING_POINT_NAVIGATION_LINK, mLastLink);
 		v.put(Books.LAST_READING_DATE, System.currentTimeMillis());
-		v.put(Books.LAST_READING_POINT_PAGE_NUMBER, offsetY);
+		v.put(Books.LAST_READING_POINT_PAGE_NUMBER, mLastPosition);
 
 		getContentResolver().update(lastRead, v, null, null);
 

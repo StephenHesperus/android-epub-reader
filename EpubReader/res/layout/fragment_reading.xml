@@ -8,24 +8,37 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
-		android:layout_marginLeft="48dp"
-		android:layout_marginRight="48dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="8dp"
 		android:background="#0000"
 		android:gravity="center" >
 
-		<Button
+		<ImageButton
 			android:id="@+id/previous"
+			style="?android:attr/borderlessButtonStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentLeft="true"
-			android:background="@drawable/background_btn_previous" />
+			android:contentDescription="@string/button_previous"
+			android:src="@drawable/ic_btn_previous" />
 
-		<Button
+		<ImageButton
+			android:id="@+id/history_backward"
+			style="?android:attr/borderlessButtonStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@id/previous"
+			android:contentDescription="@string/button_history_backward"
+			android:src="@drawable/ic_btn_history_backward" />
+
+		<ImageButton
 			android:id="@+id/next"
+			style="?android:attr/borderlessButtonStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentRight="true"
-			android:background="@drawable/background_btn_next" />
+			android:contentDescription="@string/button_next"
+			android:src="@drawable/ic_btn_next" />
 	</RelativeLayout>
 
 	<WebView
