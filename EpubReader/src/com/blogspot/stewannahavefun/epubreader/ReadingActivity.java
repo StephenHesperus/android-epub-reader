@@ -69,6 +69,8 @@ public class ReadingActivity extends Activity implements
 	private final Handler mHandler = new Handler();
 	private ImageButton mPreviousButton;
 	private ImageButton mNextButton;
+	protected ImageButton mBackwardButton;
+	protected ImageButton mForwardButton;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -123,6 +125,9 @@ public class ReadingActivity extends Activity implements
 						mNavigationList.setItemChecked(position, true);
 					}
 				});
+
+				mBackwardButton = (ImageButton) findViewById(R.id.history_backward);
+				mForwardButton = (ImageButton) findViewById(R.id.history_forward);
 			}
 		});
 
