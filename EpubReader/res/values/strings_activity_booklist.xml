@@ -27,6 +27,5 @@
 	<string name="button_previous">Previous</string>
 	<string name="button_next">Next</string>
 	<string name="button_history_backward">Backward</string>
-	<string name="button_history_forward">Forward</string>
 
 </resources>
