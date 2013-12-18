@@ -348,12 +348,12 @@ public class ReadingActivity extends Activity implements
 
 		ContentValues v = new ContentValues();
 		Uri lastRead = ContentUris.withAppendedId(Books.BOOK_ID_URI_BASE, m_Id);
-		int offsetY = mBookView.getScrollY();
+		mLastPosition = mBookView.getScrollY();
 
 		v.put(Books.LAST_READING_POINT_NAVIGATION_ORDER, mLastOrder);
 		v.put(Books.LAST_READING_POINT_NAVIGATION_LINK, mLastLink);
 		v.put(Books.LAST_READING_DATE, System.currentTimeMillis());
-		v.put(Books.LAST_READING_POINT_PAGE_NUMBER, offsetY);
+		v.put(Books.LAST_READING_POINT_PAGE_NUMBER, mLastPosition);
 
 		getContentResolver().update(lastRead, v, null, null);
 
