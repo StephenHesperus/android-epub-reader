@@ -73,6 +73,7 @@ public class ReadingActivity extends Activity implements
 	protected ImageButton mBackwardButton;
 	protected ImageButton mForwardButton;
 	private Stack<String> mHistoryStack;
+	private Runnable mScrollRunnable;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -86,6 +87,20 @@ public class ReadingActivity extends Activity implements
 		setContentView(R.layout.activity_reading);
 
 		mHistoryStack = new Stack<String>();
+
+		mScrollRunnable = new Runnable() {
+
+			@Override
+			public void run() {
+				if (mBookView.getContentHeight() > 0) {
+					mBookView.scrollTo(0, mLastPosition);
+
+					mHandler.removeCallbacks(this);
+				} else {
+					mHandler.postDelayed(this, 100);
+				}
+			}
+		};
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
