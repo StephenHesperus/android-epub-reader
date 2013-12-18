@@ -158,6 +158,7 @@ public class ReadingActivity extends Activity implements
 						String url = mHistoryStack.pop();
 
 						if (url != null) {
+							preparePageJumping(url);
 							mBookView.loadUrl(url);
 							mHandler.postDelayed(mScrollRunnable, 100);
 						}
