@@ -217,6 +217,13 @@ public class ReadingActivity extends Activity implements
 				applyTheme();
 
 				mLastLink = url;
+
+				mBackwardButton.setVisibility(mBookView.canGoBack()
+						? View.VISIBLE
+						: View.INVISIBLE);
+				mForwardButton.setVisibility(mBookView.canGoForward()
+						? View.VISIBLE
+						: View.INVISIBLE);
 			}
 
 			@Override
