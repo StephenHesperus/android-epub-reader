@@ -318,19 +318,7 @@ public class ReadingActivity extends Activity implements
 
 			mBookView.loadUrl(mLastLink);
 
-			mHandler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					if (mBookView.getContentHeight() > 0) {
-						mBookView.scrollTo(0, mLastPosition);
-
-						mHandler.removeCallbacks(this);
-					} else {
-						mHandler.postDelayed(this, 100);
-					}
-				}
-			}, 100);
+			mHandler.postDelayed(mScrollRunnable, 100);
 		}
 
 		getLoaderManager().initLoader(0, null, this);
