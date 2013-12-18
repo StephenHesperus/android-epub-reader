@@ -320,6 +320,7 @@ public class ReadingActivity extends Activity implements
 
 			mHandler.postDelayed(mScrollRunnable, 100);
 		}
+		c.close();
 
 		getLoaderManager().initLoader(0, null, this);
 	}
