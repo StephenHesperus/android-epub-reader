@@ -225,9 +225,9 @@ public class ReadingActivity extends Activity implements
 
 				mLastLink = url;
 
-				mBackwardButton.setVisibility(mBookView.canGoBack()
-						? View.VISIBLE
-						: View.INVISIBLE);
+				mBackwardButton.setVisibility(mHistoryStack.empty()
+						? View.INVISIBLE
+						: View.VISIBLE);
 				mForwardButton.setVisibility(mBookView.canGoForward()
 						? View.VISIBLE
 						: View.INVISIBLE);
