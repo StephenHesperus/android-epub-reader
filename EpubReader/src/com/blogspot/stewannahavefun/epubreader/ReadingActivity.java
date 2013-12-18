@@ -74,6 +74,7 @@ public class ReadingActivity extends Activity implements
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
 	private static final String ARG_CSS = "ARG_CSS";
 	private static final String KEY_CSS = "KEY_CSS";
+	private static final String DEFAULT_ENCODING = "utf-8";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +179,7 @@ public class ReadingActivity extends Activity implements
 		WebSettings webSettings = mBookView.getSettings();
 
 		enableJavaScript(webSettings);
+		webSettings.setDefaultTextEncodingName(DEFAULT_ENCODING);
 
 		WebViewClient webViewClient = new WebViewClient() {
 
