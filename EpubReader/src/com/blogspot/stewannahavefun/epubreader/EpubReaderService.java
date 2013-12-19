@@ -197,6 +197,7 @@ public class EpubReaderService extends IntentService {
 
 		File base = new File(BASE);
 		File[] epubList = base.listFiles();
+		int booksFound = 0;
 
 		for (final File epub : epubList) {
 			File[] files = epub.listFiles(new FilenameFilter() {
@@ -239,6 +240,8 @@ public class EpubReaderService extends IntentService {
 			} catch (FileIsNotConstructedException e) {
 				e.printStackTrace();
 			}
+
+			booksFound++;
 		}
 	}
 }
