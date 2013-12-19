@@ -49,6 +49,8 @@ public class EpubReaderService extends IntentService {
 			.getAbsolutePath() + "/epubreader-test/data/";
 	private static final String ACTION_DELETION_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS";
 	private static final String ACTION_DELETION_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS_EXTRA";
+	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS";
+	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA";
 	private String mBookId;
 
 	public EpubReaderService() {
@@ -206,6 +208,12 @@ public class EpubReaderService extends IntentService {
 				// update book table at last so that contents table is ready to
 				// use when the book shows up in book list
 				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+
+				Intent oneBookOk = new Intent(ACTION_RESCAN_ONE_BOOK_SUCCESS);
+
+				oneBookOk.putExtra(ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA,
+						epub.getName());
+				sendBroadcast(oneBookOk);
 			} catch (FileIsNotConstructedException e) {
 				e.printStackTrace();
 			}
