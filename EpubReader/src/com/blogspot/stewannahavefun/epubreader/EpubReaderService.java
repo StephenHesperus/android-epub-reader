@@ -198,6 +198,18 @@ public class EpubReaderService extends IntentService {
 		}
 	}
 
+	private Uri insertTemporaryRowIntoBookTable() {
+		ContentValues tmp = new ContentValues();
+
+		tmp.put(Books.BOOK_ID, Books.BOOK_ID);
+		tmp.put(Books.TITLE, TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR);
+		tmp.put(Books.LOCATION, Books.LOCATION);
+
+		Uri newRow = getContentResolver().insert(Books.BOOKS_URI, tmp);
+
+		return newRow;
+	}
+
 	private void rescanExistingBooks(Intent intent) {
 		getContentResolver().delete(Books.BOOKS_URI, null, null);
 		getContentResolver().delete(Contents.CONTENTS_URI, null, null);
