@@ -278,8 +278,9 @@ public class ReadingActivity extends Activity implements
 
 			mNavigationList.setItemChecked(mLastOrder - 1, true);
 			mNavigationList.setSelection(mLastOrder - 1);
+
+			c.close();
 		}
-		c.close();
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
@@ -311,8 +312,9 @@ public class ReadingActivity extends Activity implements
 			mBookView.loadUrl(mLastLink);
 
 			mHandler.postDelayed(mScrollRunnable, 100);
+
+			c.close();
 		}
-		c.close();
 
 		getLoaderManager().initLoader(0, null, this);
 	}
