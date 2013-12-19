@@ -357,6 +357,21 @@ public class BookListActivity extends Activity implements
 	}
 
 	private void showRecoveryDialog() {
+		TextView headerView = new TextView(this, null,
+				android.R.attr.listSeparatorTextViewStyle);
+		final ListView listView = new ListView(this);
+		ArrayList<FileInfo> backups = collectBackups();
+
+		final ArrayAdapter<FileInfo> adapter = new ArrayAdapter<FileInfo>(this,
+				android.R.layout.simple_list_item_multiple_choice,
+				android.R.id.text1, backups);
+
+		headerView.setText(R.string.deleted_book_list_header);
+		listView.setHeaderDividersEnabled(true);
+		listView.addHeaderView(headerView);
+		listView.setAdapter(adapter);
+		listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		builder.setTitle(R.string.recovery_dialog_title)
