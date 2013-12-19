@@ -296,6 +296,7 @@ public class BookListActivity extends Activity implements
 		filter.addAction(ACTION_DELETION_SUCCESS);
 		filter.addAction(ACTION_RESCAN_ONE_BOOK_SUCCESS);
 		filter.addAction(ACTION_ADD_BOOK_SUCCESS);
+		filter.addAction(ACTION_RESCAN_RESULT);
 		registerReceiver(mReceiver, filter);
 	}
 
