@@ -14,7 +14,7 @@
 	<item
 		android:id="@+id/action_rescan"
 		android:icon="@drawable/ic_action_rescan"
-		android:orderInCategory="49"
+		android:orderInCategory="100"
 		android:showAsAction="never"
 		android:title="@string/action_rescan"/>
 
