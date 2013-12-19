@@ -52,6 +52,13 @@ public class BookListActivity extends Activity implements
 				String msg = filename + " is not a valid epub file!";
 
 				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+			} else if (ACTION_DELETION_SUCCESS.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_DELETION_SUCCESS_EXTRA);
+				String msg = filename
+						+ " is deleted from both book list and storage!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
 			}
 		}
 
@@ -69,6 +76,8 @@ public class BookListActivity extends Activity implements
 	private static final String MIMETYPE = "application/epub+zip";
 	protected static String ACTION_DELETE_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB";
 	protected static final String ACTION_DELETE_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB_EXTRA";
+	private static final String ACTION_DELETION_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS";
+	private static final String ACTION_DELETION_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
