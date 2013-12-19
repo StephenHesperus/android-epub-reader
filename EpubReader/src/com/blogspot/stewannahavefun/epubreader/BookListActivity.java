@@ -1,6 +1,8 @@
 package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +18,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,10 +30,15 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
@@ -108,6 +118,7 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_ADD_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS_EXTRA";
 	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
 	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
+	private static final String ACTION_ADD_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
@@ -344,6 +355,37 @@ public class BookListActivity extends Activity implements
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
+	private void showRecoveryDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle(R.string.recovery_dialog_title)
+				.setView(listView)
+				.setCancelable(true)
+				.setNegativeButton(android.R.string.cancel,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+							}
+						})
+				.setPositiveButton(R.string.recover,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+
+							}
+						});
+
+		builder.create()
+				.show();
+	}
+
+
 
 	private void showRescanWarningDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
