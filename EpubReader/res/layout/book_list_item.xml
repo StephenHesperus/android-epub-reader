@@ -75,4 +75,17 @@
 			android:textSize="12sp" />
 	</RelativeLayout>
 
+	<RelativeLayout
+		android:id="@+id/book_list_item_progress_bar"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#fff"
+		android:visibility="gone" >
+
+		<ProgressBar
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true" />
+	</RelativeLayout>
+
 </RelativeLayout>

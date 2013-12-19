@@ -56,6 +56,7 @@ public class EpubReaderService extends IntentService {
 	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
 	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
 	private static final String ACTION_ADD_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_EXTRA";
+	private static final String TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR = "~com.blogspot.stewannahavefun.epubreader.TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR";
 	private String mBookId;
 
 	public EpubReaderService() {
@@ -167,6 +168,8 @@ public class EpubReaderService extends IntentService {
 
 		Processor processor = new Processor(epub, output);
 
+		Uri newRow = insertTemporaryRowIntoBookTable();
+
 		try {
 			boolean success = processor.unZipEpubFile();
 
@@ -181,13 +184,15 @@ public class EpubReaderService extends IntentService {
 
 				processor.readNcxFile();
 
-				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+				getContentResolver().update(newRow, bookInfo, null, null);
 
 				Intent add = new Intent(ACTION_ADD_BOOK_SUCCESS);
 
 				add.putExtra(ACTION_ADD_BOOK_SUCCESS_EXTRA, epub.getName());
 			}
 		} catch (UnsupportedFileException e) {
+			getContentResolver().delete(newRow, null, null);
+
 			Intent unsupported = new Intent(ACTION_UNSUPPORTED_FILE);
 
 			unsupported.putExtra(ACTION_UNSUPPORTED_FILE_EXTRA, epub.getName());
@@ -195,6 +200,18 @@ public class EpubReaderService extends IntentService {
 		} catch (FileIsNotConstructedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private Uri insertTemporaryRowIntoBookTable() {
+		ContentValues tmp = new ContentValues();
+
+		tmp.put(Books.BOOK_ID, Books.BOOK_ID);
+		tmp.put(Books.TITLE, TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR);
+		tmp.put(Books.LOCATION, Books.LOCATION);
+
+		Uri newRow = getContentResolver().insert(Books.BOOKS_URI, tmp);
+
+		return newRow;
 	}
 
 	private void rescanExistingBooks(Intent intent) {
@@ -224,6 +241,8 @@ public class EpubReaderService extends IntentService {
 
 			Processor processor = new Processor(null, epub);
 
+			Uri newRow = insertTemporaryRowIntoBookTable();
+
 			processor.readContainerDotXmlFile();
 			try {
 				ContentValues bookInfo = processor.readOpfFile();
@@ -236,7 +255,7 @@ public class EpubReaderService extends IntentService {
 
 				// update book table at last so that contents table is ready to
 				// use when the book shows up in book list
-				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+				getContentResolver().update(newRow, bookInfo, null, null);
 
 				Intent oneBookOk = new Intent(ACTION_RESCAN_ONE_BOOK_SUCCESS);
 

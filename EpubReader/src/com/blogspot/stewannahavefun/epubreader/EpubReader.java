@@ -100,6 +100,7 @@ public class EpubReader {
 			Books.COVER, // 4
 			Books.ADDED_DATE, // 5
 			Books.LAST_READING_DATE, // 6
+			Books.TITLE
 	};
 	public static final String[] READ_BOOK_PROJECTION = new String[] {
 			Books._ID,
