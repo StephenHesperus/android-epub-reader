@@ -11,6 +11,7 @@
 	<!-- action bar -->
 	<string name="action_open">Open</string>
 	<string name="action_rescan">Rescan</string>
+	<string name="action_recover">Recover deleted books</string>
 
 	<!-- rescan waring dialog -->
 	<string name="rescan_warning_dialog_title">Rescan Existing Books</string>
@@ -23,5 +24,15 @@
 	<!-- deletion confirm dialog -->
 	<string name="deletion_confirm_dialog_title">Delete Selected Books?</string>
 	<string name="deletion_confirm_dialog_message">This will remove the book(s) both from the book list and the storage!</string>
+
+	<!-- image buttons -->
+	<string name="button_previous">Previous</string>
+	<string name="button_next">Next</string>
+	<string name="button_history_backward">Backward</string>
+
+	<!-- recovery dialog -->
+	<string name="recovery_dialog_title">Recover from deleted books</string>
+	<string name="deleted_book_list_header">Books can be recovered</string>
+	<string name="recover">Recover</string>
 
 </resources>

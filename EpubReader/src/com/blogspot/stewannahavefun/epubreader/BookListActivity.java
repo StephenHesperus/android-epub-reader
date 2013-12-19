@@ -1,6 +1,8 @@
 package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +18,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,10 +30,15 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
@@ -52,6 +62,37 @@ public class BookListActivity extends Activity implements
 				String msg = filename + " is not a valid epub file!";
 
 				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+			} else if (ACTION_DELETION_SUCCESS.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_DELETION_SUCCESS_EXTRA);
+				String msg = filename
+						+ " is deleted from both book list and storage!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+			} else if (ACTION_RESCAN_ONE_BOOK_SUCCESS
+					.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA);
+				String msg = filename
+						+ " is added during rescanning!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+			} else if (ACTION_ADD_BOOK_SUCCESS.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_ADD_BOOK_SUCCESS_EXTRA);
+				String msg = filename
+						+ " is newly added successfully!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+			} else if (ACTION_RESCAN_RESULT.equals(intent.getAction())) {
+				int booksFound = intent
+						.getIntExtra(ACTION_RESCAN_RESULT_EXTRA, 0);
+				String msg = "Rescan finishes, "
+						+ booksFound
+						+ ((booksFound > 1) ? " books " : " book ")
+						+ " found!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -69,6 +110,15 @@ public class BookListActivity extends Activity implements
 	private static final String MIMETYPE = "application/epub+zip";
 	protected static String ACTION_DELETE_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB";
 	protected static final String ACTION_DELETE_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB_EXTRA";
+	private static final String ACTION_DELETION_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS";
+	private static final String ACTION_DELETION_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS_EXTRA";
+	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS";
+	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA";
+	private static final String ACTION_ADD_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS";
+	private static final String ACTION_ADD_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS_EXTRA";
+	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
+	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
+	private static final String ACTION_ADD_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
@@ -254,6 +304,10 @@ public class BookListActivity extends Activity implements
 
 		filter.addAction(ACTION_DUPLICATION);
 		filter.addAction(ACTION_UNSUPPORTED_FILE);
+		filter.addAction(ACTION_DELETION_SUCCESS);
+		filter.addAction(ACTION_RESCAN_ONE_BOOK_SUCCESS);
+		filter.addAction(ACTION_ADD_BOOK_SUCCESS);
+		filter.addAction(ACTION_RESCAN_RESULT);
 		registerReceiver(mReceiver, filter);
 	}
 
@@ -292,9 +346,140 @@ public class BookListActivity extends Activity implements
 
 			return true;
 
+		case R.id.action_recover:
+			showRecoveryDialog();
+
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	private void showRecoveryDialog() {
+		TextView headerView = new TextView(this, null,
+				android.R.attr.listSeparatorTextViewStyle);
+		final ListView listView = new ListView(this);
+		ArrayList<FileInfo> backups = collectBackups();
+
+		final ArrayAdapter<FileInfo> adapter = new ArrayAdapter<FileInfo>(this,
+				android.R.layout.simple_list_item_multiple_choice,
+				android.R.id.text1, backups);
+
+		headerView.setText(R.string.deleted_book_list_header);
+		listView.setHeaderDividersEnabled(true);
+		listView.addHeaderView(headerView);
+		listView.setAdapter(adapter);
+		listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				CheckedTextView checkedTextView = (CheckedTextView) v;
+
+				checkedTextView.setChecked(true);
+				listView.setItemChecked(position, true);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+		builder.setTitle(R.string.recovery_dialog_title)
+				.setView(listView)
+				.setCancelable(true)
+				.setNegativeButton(android.R.string.cancel,
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+							}
+						})
+				.setPositiveButton(R.string.recover,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								SparseBooleanArray positions = listView
+										.getCheckedItemPositions();
+
+								for (int i = 0; i < positions.size(); i++) {
+									Log.d("position", positions.get(i) + "");
+									if (positions.get(positions.keyAt(i))) {
+										File file = adapter.getItem(i)
+												.getFile();
+										boolean fromBackup = true;
+										Intent process = new Intent(
+												ACTION_ADD_EPUB);
+
+										process.setDataAndType(
+												Uri.fromFile(file), MIMETYPE);
+										process.putExtra(ACTION_ADD_EPUB_EXTRA,
+												fromBackup);
+										BookListActivity.this
+												.startService(process);
+									}
+								}
+							}
+						});
+
+		builder.create()
+				.show();
+	}
+
+	private class FileInfo {
+		private String mFileName;
+		private File mFile;
+
+		public FileInfo(String filename, File file) {
+			mFileName = filename;
+			mFile = file;
+		}
+
+		public File getFile() {
+			return mFile;
+		}
+
+		@Override
+		public String toString() {
+			return mFileName;
+		}
+	}
+
+	private ArrayList<FileInfo> collectBackups() {
+		final String BASE = Environment
+				.getExternalStorageDirectory()
+				.getAbsolutePath() + "/epubreader-test/data/";
+		File base = new File(BASE);
+		File[] epubDirList = base.listFiles(new FileFilter() {
+
+			@Override
+			public boolean accept(File pathname) {
+				File[] files = pathname.listFiles();
+
+				if (files.length == 1)
+					return true;
+
+				return false;
+			}
+		});
+
+		ArrayList<FileInfo> fileInfos = new ArrayList<FileInfo>();
+		for (File epubDir : epubDirList) {
+			File epub = epubDir.listFiles()[0];
+			fileInfos.add(new FileInfo(epub.getName(), epub));
+		}
+
+		return fileInfos;
 	}
 
 	private void showRescanWarningDialog() {
