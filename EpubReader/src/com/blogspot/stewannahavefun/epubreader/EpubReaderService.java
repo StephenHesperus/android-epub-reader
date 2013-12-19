@@ -198,7 +198,23 @@ public class EpubReaderService extends IntentService {
 		File base = new File(BASE);
 		File[] epubList = base.listFiles();
 
-		for (File epub : epubList) {
+		for (final File epub : epubList) {
+			File[] files = epub.listFiles(new FilenameFilter() {
+
+				@Override
+				public boolean accept(File dir, String filename) {
+					if (filename.equals(epub.getName())) {
+						return false;
+					}
+
+					return true;
+				}
+			});
+
+			if (files.length == 0) {
+				continue;
+			}
+
 			Processor processor = new Processor(null, epub);
 
 			processor.readContainerDotXmlFile();
