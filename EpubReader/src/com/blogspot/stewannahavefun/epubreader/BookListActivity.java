@@ -74,6 +74,15 @@ public class BookListActivity extends Activity implements
 						+ " is newly added successfully!";
 
 				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+			} else if (ACTION_RESCAN_RESULT.equals(intent.getAction())) {
+				int booksFound = intent
+						.getIntExtra(ACTION_RESCAN_RESULT_EXTRA, 0);
+				String msg = "Rescan finishes, "
+						+ booksFound
+						+ ((booksFound > 1) ? " books " : " book ")
+						+ " found!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -97,6 +106,8 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA";
 	private static final String ACTION_ADD_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS";
 	private static final String ACTION_ADD_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS_EXTRA";
+	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
+	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
