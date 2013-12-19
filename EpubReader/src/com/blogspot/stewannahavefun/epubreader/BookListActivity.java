@@ -172,6 +172,17 @@ public class BookListActivity extends Activity implements
 					cover.setImageResource(R.drawable.ic_epub_cover);
 
 					return true;
+				} else if (view.getId() == R.id.book_list_item_progress_bar) {
+					String title = cursor.getString(columnIndex);
+					RelativeLayout progressBar = (RelativeLayout) view;
+
+					if (title.equals(TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR)) {
+						progressBar.setVisibility(View.VISIBLE);
+					} else {
+						progressBar.setVisibility(View.GONE);
+					}
+
+					return true;
 				}
 
 				return false;
