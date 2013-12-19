@@ -455,6 +455,32 @@ public class BookListActivity extends Activity implements
 		}
 	}
 
+	private ArrayList<FileInfo> collectBackups() {
+		final String BASE = Environment
+				.getExternalStorageDirectory()
+				.getAbsolutePath() + "/epubreader-test/data/";
+		File base = new File(BASE);
+		File[] epubDirList = base.listFiles(new FileFilter() {
+
+			@Override
+			public boolean accept(File pathname) {
+				File[] files = pathname.listFiles();
+
+				if (files.length == 1)
+					return true;
+
+				return false;
+			}
+		});
+
+		ArrayList<FileInfo> fileInfos = new ArrayList<FileInfo>();
+		for (File epubDir : epubDirList) {
+			File epub = epubDir.listFiles()[0];
+			fileInfos.add(new FileInfo(epub.getName(), epub));
+		}
+
+		return fileInfos;
+	}
 
 	private void showRescanWarningDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
