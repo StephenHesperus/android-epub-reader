@@ -436,6 +436,24 @@ public class BookListActivity extends Activity implements
 				.show();
 	}
 
+	private class FileInfo {
+		private String mFileName;
+		private File mFile;
+
+		public FileInfo(String filename, File file) {
+			mFileName = filename;
+			mFile = file;
+		}
+
+		public File getFile() {
+			return mFile;
+		}
+
+		@Override
+		public String toString() {
+			return mFileName;
+		}
+	}
 
 
 	private void showRescanWarningDialog() {
