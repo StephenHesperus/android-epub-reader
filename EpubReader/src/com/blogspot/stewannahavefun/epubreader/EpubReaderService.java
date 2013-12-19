@@ -47,6 +47,8 @@ public class EpubReaderService extends IntentService {
 	private static final String BASE = Environment
 			.getExternalStorageDirectory()
 			.getAbsolutePath() + "/epubreader-test/data/";
+	private static final String ACTION_DELETION_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS";
+	private static final String ACTION_DELETION_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS_EXTRA";
 	private String mBookId;
 
 	public EpubReaderService() {
@@ -104,6 +106,11 @@ public class EpubReaderService extends IntentService {
 				getContentResolver().delete(delete, null, null);
 
 				book.close();
+
+				Intent deletionOk = new Intent(ACTION_DELETION_SUCCESS);
+
+				deletionOk.putExtra(ACTION_DELETION_SUCCESS_EXTRA, epubName);
+				sendBroadcast(deletionOk);
 			}
 		}
 	}
