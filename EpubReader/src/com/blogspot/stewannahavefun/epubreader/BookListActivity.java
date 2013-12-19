@@ -52,6 +52,28 @@ public class BookListActivity extends Activity implements
 				String msg = filename + " is not a valid epub file!";
 
 				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+			} else if (ACTION_DELETION_SUCCESS.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_DELETION_SUCCESS_EXTRA);
+				String msg = filename
+						+ " is deleted from both book list and storage!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+			} else if (ACTION_RESCAN_ONE_BOOK_SUCCESS
+					.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA);
+				String msg = filename
+						+ " is added during rescanning!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+			} else if (ACTION_ADD_BOOK_SUCCESS.equals(intent.getAction())) {
+				String filename = intent
+						.getStringExtra(ACTION_ADD_BOOK_SUCCESS_EXTRA);
+				String msg = filename
+						+ " is newly added successfully!";
+
+				Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -69,6 +91,12 @@ public class BookListActivity extends Activity implements
 	private static final String MIMETYPE = "application/epub+zip";
 	protected static String ACTION_DELETE_EPUB = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB";
 	protected static final String ACTION_DELETE_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETE_EPUB_EXTRA";
+	private static final String ACTION_DELETION_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS";
+	private static final String ACTION_DELETION_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS_EXTRA";
+	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS";
+	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA";
+	private static final String ACTION_ADD_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS";
+	private static final String ACTION_ADD_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS_EXTRA";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
@@ -254,6 +282,9 @@ public class BookListActivity extends Activity implements
 
 		filter.addAction(ACTION_DUPLICATION);
 		filter.addAction(ACTION_UNSUPPORTED_FILE);
+		filter.addAction(ACTION_DELETION_SUCCESS);
+		filter.addAction(ACTION_RESCAN_ONE_BOOK_SUCCESS);
+		filter.addAction(ACTION_ADD_BOOK_SUCCESS);
 		registerReceiver(mReceiver, filter);
 	}
 
