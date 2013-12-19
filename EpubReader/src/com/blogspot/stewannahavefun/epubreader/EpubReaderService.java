@@ -53,6 +53,8 @@ public class EpubReaderService extends IntentService {
 	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA";
 	private static final String ACTION_ADD_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS";
 	private static final String ACTION_ADD_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS_EXTRA";
+	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
+	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
 	private String mBookId;
 
 	public EpubReaderService() {
@@ -243,5 +245,10 @@ public class EpubReaderService extends IntentService {
 
 			booksFound++;
 		}
+
+		Intent rescanResult = new Intent(ACTION_RESCAN_RESULT);
+
+		rescanResult.putExtra(ACTION_RESCAN_RESULT_EXTRA, booksFound);
+		sendBroadcast(rescanResult);
 	}
 }
