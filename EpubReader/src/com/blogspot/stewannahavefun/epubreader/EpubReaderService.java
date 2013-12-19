@@ -51,6 +51,8 @@ public class EpubReaderService extends IntentService {
 	private static final String ACTION_DELETION_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_DELETION_SUCCESS_EXTRA";
 	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS";
 	private static final String ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_ONE_BOOK_SUCCESS_EXTRA";
+	private static final String ACTION_ADD_BOOK_SUCCESS = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS";
+	private static final String ACTION_ADD_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS_EXTRA";
 	private String mBookId;
 
 	public EpubReaderService() {
@@ -174,6 +176,10 @@ public class EpubReaderService extends IntentService {
 				processor.readNcxFile();
 
 				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+
+				Intent add = new Intent(ACTION_ADD_BOOK_SUCCESS);
+
+				add.putExtra(ACTION_ADD_BOOK_SUCCESS_EXTRA, epub.getName());
 			}
 		} catch (UnsupportedFileException e) {
 			Intent unsupported = new Intent(ACTION_UNSUPPORTED_FILE);
