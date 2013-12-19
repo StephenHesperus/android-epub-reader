@@ -335,6 +335,11 @@ public class BookListActivity extends Activity implements
 
 			return true;
 
+		case R.id.action_recover:
+			showRecoveryDialog();
+
+			return true;
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
