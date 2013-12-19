@@ -56,6 +56,7 @@ public class EpubReaderService extends IntentService {
 	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
 	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
 	private static final String ACTION_ADD_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_EXTRA";
+	private static final String TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR = "~com.blogspot.stewannahavefun.epubreader.TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR";
 	private String mBookId;
 
 	public EpubReaderService() {
