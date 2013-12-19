@@ -225,6 +225,14 @@ public class EpubReaderService extends IntentService {
 
 			Processor processor = new Processor(null, epub);
 
+			ContentValues tmp = new ContentValues();
+
+			tmp.put(Books.BOOK_ID, Books.BOOK_ID);
+			tmp.put(Books.TITLE, TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR);
+			tmp.put(Books.LOCATION, Books.LOCATION);
+
+			Uri newRow = getContentResolver().insert(Books.BOOKS_URI, tmp);
+
 			processor.readContainerDotXmlFile();
 			try {
 				ContentValues bookInfo = processor.readOpfFile();
@@ -237,7 +245,7 @@ public class EpubReaderService extends IntentService {
 
 				// update book table at last so that contents table is ready to
 				// use when the book shows up in book list
-				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+				getContentResolver().update(newRow, bookInfo, null, null);
 
 				Intent oneBookOk = new Intent(ACTION_RESCAN_ONE_BOOK_SUCCESS);
 
