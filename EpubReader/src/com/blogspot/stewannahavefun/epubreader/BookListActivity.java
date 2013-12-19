@@ -274,6 +274,7 @@ public class BookListActivity extends Activity implements
 		filter.addAction(ACTION_DUPLICATION);
 		filter.addAction(ACTION_UNSUPPORTED_FILE);
 		filter.addAction(ACTION_DELETION_SUCCESS);
+		filter.addAction(ACTION_RESCAN_ONE_BOOK_SUCCESS);
 		registerReceiver(mReceiver, filter);
 	}
 
