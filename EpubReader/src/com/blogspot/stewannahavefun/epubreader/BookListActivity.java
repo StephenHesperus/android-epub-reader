@@ -533,7 +533,7 @@ public class BookListActivity extends Activity implements
 				this,
 				Books.BOOKS_URI,
 				EpubReader.BOOK_LIST_PROJECTION,
-				null, null, null);
+				null, null, Books.TITLE + " ASC");
 	}
 
 	@Override
