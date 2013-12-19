@@ -36,6 +36,7 @@ import android.widget.CheckedTextView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
@@ -119,6 +120,7 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
 	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
 	private static final String ACTION_ADD_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_EXTRA";
+	private static final String TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR = "~com.blogspot.stewannahavefun.epubreader.TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
@@ -134,7 +136,8 @@ public class BookListActivity extends Activity implements
 				R.id.publisher,
 				R.id.cover,
 				R.id.added_date,
-				R.id.last_reading_date
+				R.id.last_reading_date,
+				R.id.book_list_item_progress_bar
 		};
 
 		mAdapter = new SimpleCursorAdapter(
