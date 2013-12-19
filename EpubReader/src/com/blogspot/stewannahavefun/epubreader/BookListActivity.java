@@ -409,7 +409,26 @@ public class BookListActivity extends Activity implements
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
+								SparseBooleanArray positions = listView
+										.getCheckedItemPositions();
 
+								for (int i = 0; i < positions.size(); i++) {
+									Log.d("position", positions.get(i) + "");
+									if (positions.get(positions.keyAt(i))) {
+										File file = adapter.getItem(i)
+												.getFile();
+										boolean fromBackup = true;
+										Intent process = new Intent(
+												ACTION_ADD_EPUB);
+
+										process.setDataAndType(
+												Uri.fromFile(file), MIMETYPE);
+										process.putExtra(ACTION_ADD_EPUB_EXTRA,
+												fromBackup);
+										BookListActivity.this
+												.startService(process);
+									}
+								}
 							}
 						});
 
