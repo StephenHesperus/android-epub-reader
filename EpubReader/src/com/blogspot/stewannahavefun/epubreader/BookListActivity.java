@@ -371,6 +371,23 @@ public class BookListActivity extends Activity implements
 		listView.addHeaderView(headerView);
 		listView.setAdapter(adapter);
 		listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int position, long id) {
+				CheckedTextView checkedTextView = (CheckedTextView) v;
+
+				checkedTextView.setChecked(true);
+				listView.setItemChecked(position, true);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
