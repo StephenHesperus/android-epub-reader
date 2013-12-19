@@ -241,13 +241,7 @@ public class EpubReaderService extends IntentService {
 
 			Processor processor = new Processor(null, epub);
 
-			ContentValues tmp = new ContentValues();
-
-			tmp.put(Books.BOOK_ID, Books.BOOK_ID);
-			tmp.put(Books.TITLE, TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR);
-			tmp.put(Books.LOCATION, Books.LOCATION);
-
-			Uri newRow = getContentResolver().insert(Books.BOOKS_URI, tmp);
+			Uri newRow = insertTemporaryRowIntoBookTable();
 
 			processor.readContainerDotXmlFile();
 			try {
