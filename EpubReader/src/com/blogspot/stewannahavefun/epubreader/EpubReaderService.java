@@ -55,6 +55,7 @@ public class EpubReaderService extends IntentService {
 	private static final String ACTION_ADD_BOOK_SUCCESS_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_BOOK_SUCCESS_EXTRA";
 	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
 	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
+	private static final String ACTION_ADD_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_EXTRA";
 	private String mBookId;
 
 	public EpubReaderService() {
@@ -151,7 +152,10 @@ public class EpubReaderService extends IntentService {
 		File base = new File(BASE);
 		File output = new File(base, epub.getName());
 
-		if (output.isDirectory()) {
+		boolean fromBackup = intent.getBooleanExtra(ACTION_ADD_EPUB_EXTRA,
+				false);
+
+		if (!fromBackup && output.isDirectory()) {
 			Intent duplication = new Intent(ACTION_DUPLICATION);
 
 			duplication.putExtra(ACTION_DUPLICATION_EXTRA, epub.getName());
