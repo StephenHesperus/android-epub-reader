@@ -168,6 +168,8 @@ public class EpubReaderService extends IntentService {
 
 		Processor processor = new Processor(epub, output);
 
+		Uri newRow = insertTemporaryRowIntoBookTable();
+
 		try {
 			boolean success = processor.unZipEpubFile();
 
@@ -182,13 +184,15 @@ public class EpubReaderService extends IntentService {
 
 				processor.readNcxFile();
 
-				getContentResolver().insert(Books.BOOKS_URI, bookInfo);
+				getContentResolver().update(newRow, bookInfo, null, null);
 
 				Intent add = new Intent(ACTION_ADD_BOOK_SUCCESS);
 
 				add.putExtra(ACTION_ADD_BOOK_SUCCESS_EXTRA, epub.getName());
 			}
 		} catch (UnsupportedFileException e) {
+			getContentResolver().delete(newRow, null, null);
+
 			Intent unsupported = new Intent(ACTION_UNSUPPORTED_FILE);
 
 			unsupported.putExtra(ACTION_UNSUPPORTED_FILE_EXTRA, epub.getName());
