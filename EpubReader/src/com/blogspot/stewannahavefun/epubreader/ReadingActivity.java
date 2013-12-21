@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewStub.OnInflateListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -54,6 +55,16 @@ public class ReadingActivity extends Activity implements
 
 		public WebInterface(Context context) {
 			mContext = context;
+		}
+
+		@JavascriptInterface
+		public void onImageClick(String src) {
+			Uri data = Uri.parse(src);
+			Intent view = new Intent(Intent.ACTION_VIEW);
+
+			view.setDataAndType(data, "image/*");
+
+			mContext.startActivity(view);
 		}
 
 		public static String getInterfaceName() {
