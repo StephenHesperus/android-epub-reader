@@ -103,7 +103,7 @@ public class ReadingActivity extends Activity implements
 	private Runnable mScrollRunnable;
 	protected ImageButton mForwardButton;
 
-	private static final String SCHEME = "file://";
+	private static final String FILE_SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
 	private static final String ARG_CSS = "ARG_CSS";
 	private static final String KEY_CSS = "KEY_CSS";
@@ -273,7 +273,7 @@ public class ReadingActivity extends Activity implements
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if (Uri.parse(url).getScheme().equals(SCHEME)) {
+				if (Uri.parse(url).getScheme().equals(FILE_SCHEME)) {
 					return false;
 				}
 
@@ -302,7 +302,7 @@ public class ReadingActivity extends Activity implements
 	}
 
 	protected void preparePageJumping(String url) {
-		String path = url.substring(SCHEME.length()
+		String path = url.substring(FILE_SCHEME.length()
 				+ mLocationBase.length() + 1);
 		String book = Contents.BOOK_ID + " = \"" + mBookId + "\"";
 		String link = Contents.NAVIGATION_LINK + " = \"" + path
@@ -386,7 +386,7 @@ public class ReadingActivity extends Activity implements
 	}
 
 	private String constructPageUrl(String link) {
-		return SCHEME + mLocationBase + File.separator + link;
+		return FILE_SCHEME + mLocationBase + File.separator + link;
 	}
 
 	@Override
