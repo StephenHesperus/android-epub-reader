@@ -264,7 +264,7 @@ public class ReadingActivity extends Activity implements
 						? View.INVISIBLE
 						: View.VISIBLE);
 
-				registerImageListener();
+				registerListeners();
 			}
 
 			@Override
