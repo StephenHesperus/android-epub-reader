@@ -74,4 +74,8 @@ public class ReadingControl {
 	public static void addAnchorListener() {
 		mScriptTextContent += getJS_RegisterAnchorListener();
 	}
+
+	public static void setUp() {
+		mScriptTextContent = "";
+	}
 }
