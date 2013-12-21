@@ -293,8 +293,11 @@ public class ReadingActivity extends Activity implements
 		}
 	}
 
-	protected void registerImageListener() {
-		mBookView.loadUrl(ReadingControl.getImageListenerUrl());
+	protected void registerListeners() {
+		ReadingControl.addImageListener();
+		ReadingControl.addAnchorListener();
+
+		mBookView.loadUrl(ReadingControl.getJSUrl());
 	}
 
 	protected void preparePageJumping(String url) {
