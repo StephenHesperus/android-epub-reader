@@ -48,6 +48,15 @@ import com.blogspot.stewannahavefun.epubreader.ThemeEditorDialog.ThemeEditorList
 
 public class ReadingActivity extends Activity implements
 		LoaderCallbacks<Cursor>, ThemeEditorListener {
+	public static class WebInterface {
+		private static final String WEB_INTERFACE_NAME = "EpubReaderWebInterface";
+		private Context mContext;
+
+		public WebInterface(Context context) {
+			mContext = context;
+		}
+	}
+
 	private DrawerLayout mDrawerLayout;
 	private ListView mNavigationList;
 	private ActionBarDrawerToggle mDrawerToggle;
