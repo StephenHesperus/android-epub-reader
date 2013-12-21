@@ -1,7 +1,6 @@
 package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
-import java.util.Stack;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -101,7 +100,6 @@ public class ReadingActivity extends Activity implements
 	private ImageButton mPreviousButton;
 	private ImageButton mNextButton;
 	protected ImageButton mBackwardButton;
-	private Stack<String> mHistoryStack;
 	private Runnable mScrollRunnable;
 	protected ImageButton mForwardButton;
 
@@ -115,8 +113,6 @@ public class ReadingActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reading);
-
-		mHistoryStack = new Stack<String>();
 
 		mScrollRunnable = new Runnable() {
 
@@ -282,7 +278,6 @@ public class ReadingActivity extends Activity implements
 
 				String first = mBookView.getOriginalUrl();
 
-				mHistoryStack.push(first);
 
 				return super.shouldOverrideUrlLoading(view, url);
 			}
