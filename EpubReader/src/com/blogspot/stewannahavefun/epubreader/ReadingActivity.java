@@ -55,6 +55,10 @@ public class ReadingActivity extends Activity implements
 		public WebInterface(Context context) {
 			mContext = context;
 		}
+
+		public static String getInterfaceName() {
+			return WEB_INTERFACE_NAME;
+		}
 	}
 
 	private DrawerLayout mDrawerLayout;
