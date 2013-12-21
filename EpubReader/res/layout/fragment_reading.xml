@@ -32,6 +32,15 @@
 			android:src="@drawable/ic_btn_history_backward" />
 
 		<ImageButton
+			android:id="@+id/history_forward"
+			style="?android:attr/borderlessButtonStyle"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@+id/next"
+			android:contentDescription="@string/button_history_forward"
+			android:src="@drawable/ic_btn_history_forward" />
+
+		<ImageButton
 			android:id="@+id/next"
 			style="?android:attr/borderlessButtonStyle"
 			android:layout_width="wrap_content"
