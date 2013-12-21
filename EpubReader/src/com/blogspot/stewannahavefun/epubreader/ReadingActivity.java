@@ -195,6 +195,13 @@ public class ReadingActivity extends Activity implements
 						}
 					}
 				});
+				mForwardButton.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						mBookView.goForward();
+					}
+				});
 			}
 		});
 
