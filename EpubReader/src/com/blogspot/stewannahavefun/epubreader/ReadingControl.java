@@ -5,13 +5,12 @@ import com.blogspot.stewannahavefun.epubreader.ReadingActivity.WebInterface;
 public class ReadingControl {
 
 	private static final String SCRIPT_ID = "-script-injected-by-epubreader";
-
-	public ReadingControl() {
-
+	private static String mScriptTextContent;
+	static {
+		mScriptTextContent = "";
 	}
 
-	public static String getImageListenerUrl() {
-		return getJSUrl(getJS_RegisterImageListener());
+	public ReadingControl() {
 	}
 
 	private static String getJS_RegisterImageListener() {
@@ -25,6 +24,26 @@ public class ReadingControl {
 				+ "for (var i = 0; i < images.length; i++) {"
 				+ "images[i].addEventListener('click', onImageClickListener, false);"
 				+ "}";
+
+		return registerJS;
+	}
+
+	private static String getJS_RegisterAnchorListener() {
+		String registerJS = "var anchors = document.getElementsByTagName('a');"
+				+ "function onAnchorClickListener(e) {"
+				+ "var href = this.href;"
+				+ WebInterface.getInterfaceName()
+				+ "."
+				+ "onAnchorClick(href);"
+				+ "}"
+				+ "for (var i = 0; i < anchors.length; i++) {"
+				+ "anchors[i].addEventListener('click', onAnchorClickListener, false);"
+				+ "}";
+
+		return registerJS;
+	}
+
+	private static String getJS_AppendScriptToBodyEnd(String scriptContent) {
 		String js = "var script = document.getElementById('" + SCRIPT_ID
 				+ "');"
 				+ "if (script == null) {"
@@ -32,17 +51,31 @@ public class ReadingControl {
 				+ "script.id = '" + SCRIPT_ID + "';"
 				+ "script.setAttribute('type', 'text/javascript');"
 				+ "document.head.appendChild(script);"
-				+ "script.textContent = \"" + registerJS + "\";"
+				+ "script.textContent = \"" + scriptContent + "\";"
 				+ "}";
 
 		return js;
 	}
 
-	private static String getJSUrl(String input) {
-		String js = "javascript:(function() {"
-				+ input
+	public static String getJSUrl() {
+		String js = getJS_AppendScriptToBodyEnd(mScriptTextContent);
+
+		String jsUrl = "javascript:(function() {"
+				+ js
 				+ "}) ();";
 
-		return js;
+		return jsUrl;
+	}
+
+	public static void addImageListener() {
+		mScriptTextContent += getJS_RegisterImageListener();
+	}
+
+	public static void addAnchorListener() {
+		mScriptTextContent += getJS_RegisterAnchorListener();
+	}
+
+	public static void setUp() {
+		mScriptTextContent = "";
 	}
 }

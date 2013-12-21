@@ -1,7 +1,6 @@
 package com.blogspot.stewannahavefun.epubreader;
 
 import java.io.File;
-import java.util.Stack;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -42,6 +41,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
@@ -70,6 +70,11 @@ public class ReadingActivity extends Activity implements
 		public static String getInterfaceName() {
 			return WEB_INTERFACE_NAME;
 		}
+
+		@JavascriptInterface
+		public void onAnchorClick(String href) {
+			Toast.makeText(mContext, href, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private DrawerLayout mDrawerLayout;
@@ -95,10 +100,10 @@ public class ReadingActivity extends Activity implements
 	private ImageButton mPreviousButton;
 	private ImageButton mNextButton;
 	protected ImageButton mBackwardButton;
-	private Stack<String> mHistoryStack;
 	private Runnable mScrollRunnable;
+	protected ImageButton mForwardButton;
 
-	private static final String SCHEME = "file://";
+	private static final String FILE_SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
 	private static final String ARG_CSS = "ARG_CSS";
 	private static final String KEY_CSS = "KEY_CSS";
@@ -108,8 +113,6 @@ public class ReadingActivity extends Activity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reading);
-
-		mHistoryStack = new Stack<String>();
 
 		mScrollRunnable = new Runnable() {
 
@@ -171,19 +174,22 @@ public class ReadingActivity extends Activity implements
 				});
 
 				mBackwardButton = (ImageButton) findViewById(R.id.history_backward);
+				mForwardButton = (ImageButton) findViewById(R.id.history_forward);
 
 				mBackwardButton.setVisibility(View.INVISIBLE);
+				mForwardButton.setVisibility(View.INVISIBLE);
 				mBackwardButton.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						String url = mHistoryStack.pop();
+						mBookView.goBack();
+					}
+				});
+				mForwardButton.setOnClickListener(new OnClickListener() {
 
-						if (url != null) {
-							preparePageJumping(url);
-							mBookView.loadUrl(url);
-							mHandler.postDelayed(mScrollRunnable, 100);
-						}
+					@Override
+					public void onClick(View v) {
+						mBookView.goForward();
 					}
 				});
 			}
@@ -252,25 +258,30 @@ public class ReadingActivity extends Activity implements
 
 				applyTheme();
 
+				registerListeners();
+
 				mLastLink = url;
 
-				mBackwardButton.setVisibility(mHistoryStack.empty()
-						? View.INVISIBLE
-						: View.VISIBLE);
-
-				registerImageListener();
+				preparePageJumping(url);
+				mBackwardButton.setVisibility(mBookView.canGoBack()
+						? View.VISIBLE
+						: View.INVISIBLE);
+				mForwardButton.setVisibility(mBookView.canGoForward()
+						? View.VISIBLE
+						: View.INVISIBLE);
 			}
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				preparePageJumping(url);
-				mLastPosition = mBookView.getScrollY();
+				if ("file".equals(Uri.parse(url).getScheme())) {
+					return false;
+				}
 
-				String first = mBookView.getOriginalUrl();
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
-				mHistoryStack.push(first);
+				startActivity(intent);
 
-				return super.shouldOverrideUrlLoading(view, url);
+				return true;
 			}
 
 		};
@@ -287,12 +298,15 @@ public class ReadingActivity extends Activity implements
 		}
 	}
 
-	protected void registerImageListener() {
-		mBookView.loadUrl(ReadingControl.getImageListenerUrl());
+	protected void registerListeners() {
+		ReadingControl.setUp();
+		ReadingControl.addImageListener();
+
+		mBookView.loadUrl(ReadingControl.getJSUrl());
 	}
 
 	protected void preparePageJumping(String url) {
-		String path = url.substring(SCHEME.length()
+		String path = url.substring(FILE_SCHEME.length()
 				+ mLocationBase.length() + 1);
 		String book = Contents.BOOK_ID + " = \"" + mBookId + "\"";
 		String link = Contents.NAVIGATION_LINK + " = \"" + path
@@ -376,7 +390,7 @@ public class ReadingActivity extends Activity implements
 	}
 
 	private String constructPageUrl(String link) {
-		return SCHEME + mLocationBase + File.separator + link;
+		return FILE_SCHEME + mLocationBase + File.separator + link;
 	}
 
 	@Override
