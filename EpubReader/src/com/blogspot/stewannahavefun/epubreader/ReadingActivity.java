@@ -103,6 +103,7 @@ public class ReadingActivity extends Activity implements
 	protected ImageButton mBackwardButton;
 	private Stack<String> mHistoryStack;
 	private Runnable mScrollRunnable;
+	protected ImageButton mForwardButton;
 
 	private static final String SCHEME = "file://";
 	private static final String THEME_EDITOR_DIALOG = "THEME_EDITOR_DIALOG";
@@ -177,8 +178,10 @@ public class ReadingActivity extends Activity implements
 				});
 
 				mBackwardButton = (ImageButton) findViewById(R.id.history_backward);
+				mForwardButton = (ImageButton) findViewById(R.id.history_forward);
 
 				mBackwardButton.setVisibility(View.INVISIBLE);
+				mForwardButton.setVisibility(View.INVISIBLE);
 				mBackwardButton.setOnClickListener(new OnClickListener() {
 
 					@Override
