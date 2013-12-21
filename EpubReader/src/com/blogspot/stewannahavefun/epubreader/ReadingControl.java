@@ -25,6 +25,8 @@ public class ReadingControl {
 				+ "for (var i = 0; i < images.length; i++) {"
 				+ "images[i].addEventListener('click', onImageClickListener, false);"
 				+ "}";
+
+	private static String getJS_AppendScriptToBodyEnd(String scriptContent) {
 		String js = "var script = document.getElementById('" + SCRIPT_ID
 				+ "');"
 				+ "if (script == null) {"
@@ -32,7 +34,7 @@ public class ReadingControl {
 				+ "script.id = '" + SCRIPT_ID + "';"
 				+ "script.setAttribute('type', 'text/javascript');"
 				+ "document.head.appendChild(script);"
-				+ "script.textContent = \"" + registerJS + "\";"
+				+ "script.textContent = \"" + scriptContent + "\";"
 				+ "}";
 
 		return js;
