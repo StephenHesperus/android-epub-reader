@@ -25,6 +25,8 @@ public class ReadingControl {
 				+ "images[i].addEventListener('click', onImageClickListener, false);"
 				+ "}";
 
+		return registerJS;
+	}
 	private static String getJS_AppendScriptToBodyEnd(String scriptContent) {
 		String js = "var script = document.getElementById('" + SCRIPT_ID
 				+ "');"
