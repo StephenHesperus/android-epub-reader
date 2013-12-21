@@ -10,8 +10,6 @@ public class ReadingControl {
 		mScriptTextContent = "";
 	}
 
-	public static String getImageListenerUrl() {
-		return getJSUrl(getJS_RegisterImageListener());
 	public ReadingControl() {
 	}
 
