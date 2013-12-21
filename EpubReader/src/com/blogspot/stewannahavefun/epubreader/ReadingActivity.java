@@ -30,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewStub.OnInflateListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -48,6 +49,29 @@ import com.blogspot.stewannahavefun.epubreader.ThemeEditorDialog.ThemeEditorList
 
 public class ReadingActivity extends Activity implements
 		LoaderCallbacks<Cursor>, ThemeEditorListener {
+	public static class WebInterface {
+		private static final String WEB_INTERFACE_NAME = "EpubReaderWebInterface";
+		private Context mContext;
+
+		public WebInterface(Context context) {
+			mContext = context;
+		}
+
+		@JavascriptInterface
+		public void onImageClick(String src) {
+			Uri data = Uri.parse(src);
+			Intent view = new Intent(Intent.ACTION_VIEW);
+
+			view.setDataAndType(data, "image/*");
+
+			mContext.startActivity(view);
+		}
+
+		public static String getInterfaceName() {
+			return WEB_INTERFACE_NAME;
+		}
+	}
+
 	private DrawerLayout mDrawerLayout;
 	private ListView mNavigationList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -233,6 +257,8 @@ public class ReadingActivity extends Activity implements
 				mBackwardButton.setVisibility(mHistoryStack.empty()
 						? View.INVISIBLE
 						: View.VISIBLE);
+
+				registerImageListener();
 			}
 
 			@Override
@@ -251,11 +277,18 @@ public class ReadingActivity extends Activity implements
 
 		mBookView.setWebViewClient(webViewClient);
 
+		mBookView.addJavascriptInterface(new WebInterface(this),
+				WebInterface.getInterfaceName());
+
 		Intent start = getIntent();
 
 		if (start.hasExtra(Books._ID)) {
 			prepareReadingSession(start.getLongExtra(Books._ID, 1));
 		}
+	}
+
+	protected void registerImageListener() {
+		mBookView.loadUrl(ReadingControl.getImageListenerUrl());
 	}
 
 	protected void preparePageJumping(String url) {
