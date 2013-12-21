@@ -38,11 +38,14 @@ public class ReadingControl {
 		return js;
 	}
 
-	private static String getJSUrl(String input) {
-		String js = "javascript:(function() {"
-				+ input
+	public static String getJSUrl() {
+		String js = getJS_AppendScriptToBodyEnd(mScriptTextContent);
+
+		String jsUrl = "javascript:(function() {"
+				+ js
 				+ "}) ();";
 
-		return js;
+		return jsUrl;
+	}
 	}
 }
