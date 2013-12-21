@@ -257,6 +257,8 @@ public class ReadingActivity extends Activity implements
 				mBackwardButton.setVisibility(mHistoryStack.empty()
 						? View.INVISIBLE
 						: View.VISIBLE);
+
+				registerImageListener();
 			}
 
 			@Override
