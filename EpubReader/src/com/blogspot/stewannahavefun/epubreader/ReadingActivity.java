@@ -273,9 +273,13 @@ public class ReadingActivity extends Activity implements
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				if (Uri.parse(url).getScheme().equals(FILE_SCHEME)) {
+				if ("file".equals(Uri.parse(url).getScheme())) {
 					return false;
 				}
+
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+
+				startActivity(intent);
 
 				return true;
 			}
