@@ -273,11 +273,6 @@ public class ReadingActivity extends Activity implements
 
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				preparePageJumping(url);
-				mLastPosition = mBookView.getScrollY();
-
-				String first = mBookView.getOriginalUrl();
-
 
 				return super.shouldOverrideUrlLoading(view, url);
 			}
