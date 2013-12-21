@@ -27,6 +27,22 @@ public class ReadingControl {
 
 		return registerJS;
 	}
+
+	private static String getJS_RegisterAnchorListener() {
+		String registerJS = "var anchors = document.getElementsByTagName('a');"
+				+ "function onAnchorClickListener(e) {"
+				+ "var href = this.href;"
+				+ WebInterface.getInterfaceName()
+				+ "."
+				+ "onAnchorClick(href);"
+				+ "}"
+				+ "for (var i = 0; i < anchors.length; i++) {"
+				+ "anchors[i].addEventListener('click', onAnchorClickListener, false);"
+				+ "}";
+
+		return registerJS;
+	}
+
 	private static String getJS_AppendScriptToBodyEnd(String scriptContent) {
 		String js = "var script = document.getElementById('" + SCRIPT_ID
 				+ "');"
