@@ -251,6 +251,9 @@ public class ReadingActivity extends Activity implements
 
 		mBookView.setWebViewClient(webViewClient);
 
+		mBookView.addJavascriptInterface(new WebInterface(this),
+				WebInterface.getInterfaceName());
+
 		Intent start = getIntent();
 
 		if (start.hasExtra(Books._ID)) {
