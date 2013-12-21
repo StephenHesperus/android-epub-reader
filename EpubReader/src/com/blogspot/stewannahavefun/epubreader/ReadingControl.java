@@ -66,5 +66,9 @@ public class ReadingControl {
 
 		return jsUrl;
 	}
+
+	public static void addImageListener() {
+		mScriptTextContent += getJS_RegisterImageListener();
+	}
 	}
 }
