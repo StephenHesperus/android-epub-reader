@@ -36,6 +36,7 @@ import android.widget.CheckedTextView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
@@ -119,6 +120,7 @@ public class BookListActivity extends Activity implements
 	private static final String ACTION_RESCAN_RESULT = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT";
 	private static final String ACTION_RESCAN_RESULT_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_RESCAN_RESULT_EXTRA";
 	private static final String ACTION_ADD_EPUB_EXTRA = "com.blogspot.stewannahavefun.epubreader.ACTION_ADD_EPUB_EXTRA";
+	private static final String TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR = "~com.blogspot.stewannahavefun.epubreader.TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR";
 	private SimpleCursorAdapter mAdapter;
 	private ProcessorReceiver mReceiver;
 	private GridView mBookList;
@@ -134,7 +136,8 @@ public class BookListActivity extends Activity implements
 				R.id.publisher,
 				R.id.cover,
 				R.id.added_date,
-				R.id.last_reading_date
+				R.id.last_reading_date,
+				R.id.book_list_item_progress_bar
 		};
 
 		mAdapter = new SimpleCursorAdapter(
@@ -167,6 +170,17 @@ public class BookListActivity extends Activity implements
 					ImageView cover = (ImageView) view;
 
 					cover.setImageResource(R.drawable.ic_epub_cover);
+
+					return true;
+				} else if (view.getId() == R.id.book_list_item_progress_bar) {
+					String title = cursor.getString(columnIndex);
+					RelativeLayout progressBar = (RelativeLayout) view;
+
+					if (title.equals(TEMPORARY_TITLE_TO_SHOW_PROGRESS_BAR)) {
+						progressBar.setVisibility(View.VISIBLE);
+					} else {
+						progressBar.setVisibility(View.GONE);
+					}
 
 					return true;
 				}
@@ -519,7 +533,7 @@ public class BookListActivity extends Activity implements
 				this,
 				Books.BOOKS_URI,
 				EpubReader.BOOK_LIST_PROJECTION,
-				null, null, null);
+				null, null, Books.TITLE + " ASC");
 	}
 
 	@Override
