@@ -186,13 +186,7 @@ public class ReadingActivity extends Activity implements
 
 					@Override
 					public void onClick(View v) {
-						String url = mHistoryStack.pop();
-
-						if (url != null) {
-							preparePageJumping(url);
-							mBookView.loadUrl(url);
-							mHandler.postDelayed(mScrollRunnable, 100);
-						}
+						mBookView.goBack();
 					}
 				});
 				mForwardButton.setOnClickListener(new OnClickListener() {
