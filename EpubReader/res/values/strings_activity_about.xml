@@ -8,6 +8,6 @@
 	<string name="pref_title_version">Version</string>
 	<string name="pref_summary_author">Stephen Hesperus Wong\nStephenHesperusWong@gmail.com</string>
 	<string name="pref_summary_licenses">GPL v2</string>
-	<string name="pref_summary_version">0.11.1</string>
+	<string name="pref_summary_version">0.14.0</string>
 
 </resources>
