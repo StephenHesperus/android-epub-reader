@@ -70,5 +70,8 @@ public class ReadingControl {
 	public static void addImageListener() {
 		mScriptTextContent += getJS_RegisterImageListener();
 	}
+
+	public static void addAnchorListener() {
+		mScriptTextContent += getJS_RegisterAnchorListener();
 	}
 }
