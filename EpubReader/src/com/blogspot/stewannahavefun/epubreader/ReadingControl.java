@@ -37,4 +37,12 @@ public class ReadingControl {
 
 		return js;
 	}
+
+	private static String getJSUrl(String input) {
+		String js = "javascript:(function() {"
+				+ input
+				+ "}) ();";
+
+		return js;
+	}
 }
