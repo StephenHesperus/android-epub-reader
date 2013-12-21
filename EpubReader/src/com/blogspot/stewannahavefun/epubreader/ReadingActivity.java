@@ -301,7 +301,6 @@ public class ReadingActivity extends Activity implements
 	protected void registerListeners() {
 		ReadingControl.setUp();
 		ReadingControl.addImageListener();
-		ReadingControl.addAnchorListener();
 
 		mBookView.loadUrl(ReadingControl.getJSUrl());
 	}
