@@ -5,13 +5,14 @@ import com.blogspot.stewannahavefun.epubreader.ReadingActivity.WebInterface;
 public class ReadingControl {
 
 	private static final String SCRIPT_ID = "-script-injected-by-epubreader";
-
-	public ReadingControl() {
-
+	private static String mScriptTextContent;
+	static {
+		mScriptTextContent = "";
 	}
 
 	public static String getImageListenerUrl() {
 		return getJSUrl(getJS_RegisterImageListener());
+	public ReadingControl() {
 	}
 
 	private static String getJS_RegisterImageListener() {
