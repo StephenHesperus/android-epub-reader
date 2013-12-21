@@ -42,6 +42,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Books;
 import com.blogspot.stewannahavefun.epubreader.EpubReader.Contents;
@@ -69,6 +70,11 @@ public class ReadingActivity extends Activity implements
 
 		public static String getInterfaceName() {
 			return WEB_INTERFACE_NAME;
+		}
+
+		@JavascriptInterface
+		public void onAnchorClick(String href) {
+			Toast.makeText(mContext, href, Toast.LENGTH_SHORT).show();
 		}
 	}
 
