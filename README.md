@@ -1,4 +1,4 @@
-Android Epub Reader 0.14.0
+Android Epub Reader 0.14.1
 ==========================
 An Epub Reader for Android
 
