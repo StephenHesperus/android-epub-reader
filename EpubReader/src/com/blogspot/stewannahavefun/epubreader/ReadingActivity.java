@@ -306,6 +306,9 @@ public class ReadingActivity extends Activity implements
 	}
 
 	protected void preparePageJumping(String url) {
+		if (url.isEmpty())
+			return;
+
 		String path = url.substring(FILE_SCHEME.length()
 				+ mLocationBase.length() + 1);
 		String book = Contents.BOOK_ID + " = \"" + mBookId + "\"";
